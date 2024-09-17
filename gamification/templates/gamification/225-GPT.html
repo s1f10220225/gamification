@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>GPT Chat Application</title>
+</head>
+<body>
+    <h1>Chat with GPT-4o-mini</h1>
+
+    {% if messages %}
+        <div>
+            <h2>今までの会話:</h2>
+            <div>
+                {% for message in messages %}
+                    {% if message.role == 'human' %}
+                        <p><b>質問:</b> {{ message.content }}</p>
+                    {% else %}
+                        <p><b>GPTの回答:</b> {{ message.content }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="api_key">API Key:</label>
+        <input type="text" id="api_key" name="api_key" value="{{ api_key }}" required><br>
+
+        <label for="question">Your Question:</label><br>
+        <textarea id="question" name="question" required>{{ question }}</textarea><br>
+
+        <input type="submit" value="Ask GPT">
+    </form>
+</body>
+</html>

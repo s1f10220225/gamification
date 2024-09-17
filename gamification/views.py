@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from .models import Quest  # Questモデルをインポート
 from .forms import QuestForm  # QuestFormをインポート
+# ChatGPT関連
+from langchain.agents import Tool, initialize_agent, AgentType
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
+import requests #function callingを使うなら必要
 
 def top(request):
     return render(request, "gamification/top.html")
@@ -24,3 +29,53 @@ def add_quest(request):
         form = QuestForm()
 
     return render(request, "gamification/259add_quest.html", {'form': form})  # フォームをテンプレートに渡す
+
+
+def gpt(request):
+    api_key = ''
+    messages = []
+
+    # 2回目以降(POSTでリクエスト時)の処理
+    if request.method == 'POST':
+        question = request.POST.get('question')  # 質問を取得
+        api_key = request.POST.get('api_key')  # APIキーを取得
+        # 会話のリセット用。「reset」に反応。ボタンとかの方がいいかも？
+        if question=="reset":
+            del request.session['messages']
+        else:
+            # API関連の処理
+            base_url = "https://api.openai.iniad.org/api/v1"
+            model = "gpt-4o-mini"
+            temperature = 0.2 # 答えの精度。0~2で、0に近いほど毎回同じ答えが返ってきやすい。
+            chat = ChatOpenAI(openai_api_key=api_key, openai_api_base=base_url, model_name=model, temperature=temperature)
+        
+
+            # もし、セッションに会話履歴があったらその続きから会話する処理
+            if 'messages' in request.session:
+                messages = request.session['messages']
+                # JSONからHumanMessageとAIMessageオブジェクトに戻す
+                messages = [
+                    HumanMessage(content=msg['content']) if msg['role'] == 'human' else AIMessage(content=msg['content'])
+                    for msg in messages
+                ]
+            
+
+            messages.append(HumanMessage(content=question)) # 会話履歴(あれば)の最後に今回の質問を入れる
+            result = chat(messages) # ここでGPTにアクセスして回答を得る
+            messages.append(result) # 回答も履歴に入れる
+
+            # HumanMessageインスタンス(質問)およびAIMessageインスタンス(GPTの回答)をJSON形式に適応するために辞書形式に変換
+            messages_to_save = [
+                {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else {'role': 'ai', 'content': msg.content}
+                for msg in messages
+            ]
+            # セッションに現時点での会話を保存
+            request.session['messages'] = messages_to_save
+
+    context = {
+        'api_key': api_key,
+        'messages': messages,  # 会話の履歴など
+        'response_text': messages[-1].content if messages else "",  # ChatGPTの最新の応答
+    }
+
+    return render(request, "gamification/225-GPT.html", context)
