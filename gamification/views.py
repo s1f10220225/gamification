@@ -30,7 +30,7 @@ def add_quest(request):
 
     return render(request, "gamification/259add_quest.html", {'form': form})  # フォームをテンプレートに渡す
 
-
+# SystemMessage(content="あなたは日本語を英語に翻訳するアシスタントです。"),
 def gpt(request):
     api_key = ''
     messages = []
