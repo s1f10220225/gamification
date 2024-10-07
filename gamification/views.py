@@ -30,10 +30,14 @@ def add_quest(request):
 
     return render(request, "gamification/259add_quest.html", {'form': form})  # フォームをテンプレートに渡す
 
-# SystemMessage(content="あなたは日本語を英語に翻訳するアシスタントです。"),
+
+# テンプレートには「誰が」「何をしゃべった」だけを送ってる
+# 裏で、セッションでJson形式で履歴保存
 def gpt(request):
     api_key = ''
     messages = []
+    message_list = []
+    initialized = False
 
     # 2回目以降(POSTでリクエスト時)の処理
     if request.method == 'POST':
@@ -55,26 +59,42 @@ def gpt(request):
                 messages = request.session['messages']
                 # JSONからHumanMessageとAIMessageオブジェクトに戻す
                 messages = [
-                    HumanMessage(content=msg['content']) if msg['role'] == 'human' else AIMessage(content=msg['content'])
+                    HumanMessage(content=msg['content']) if msg['role'] == 'human' else 
+                    AIMessage(content=msg['content']) if msg['role'] == 'ai' else
+                    SystemMessage(content=msg['content'])
                     for msg in messages
                 ]
+            else:
+                messages = [
+                    SystemMessage(content="あなたは日本語を英語に翻訳するアシスタントです。ユーザーの日本語を英語に翻訳してください。")
+                ]
+                initialized = True # 初回フラグを設定
             
 
             messages.append(HumanMessage(content=question)) # 会話履歴(あれば)の最後に今回の質問を入れる
             result = chat(messages) # ここでGPTにアクセスして回答を得る
             messages.append(result) # 回答も履歴に入れる
 
-            # HumanMessageインスタンス(質問)およびAIMessageインスタンス(GPTの回答)をJSON形式に適応するために辞書形式に変換
+            # HumanMessage、AIMessage、SystemMessageオブジェクトをJSON形式に適応するために辞書形式に変換
             messages_to_save = [
-                {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else {'role': 'ai', 'content': msg.content}
+                {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else 
+                {'role': 'ai', 'content': msg.content} if isinstance(msg, AIMessage) else
+                {'role': 'system', 'content': msg.content}
                 for msg in messages
             ]
             # セッションに現時点での会話を保存
             request.session['messages'] = messages_to_save
 
+            # メッセージのタイプを識別してコンテキストに渡すリストを作成
+            for message in messages:
+                message_list.append({
+                    'type': type(message).__name__,
+                    'content': message.content
+                })
+
     context = {
         'api_key': api_key,
-        'messages': messages,  # 会話の履歴など
+        'messages': message_list,  # 会話の履歴など
         'response_text': messages[-1].content if messages else "",  # ChatGPTの最新の応答
     }
 

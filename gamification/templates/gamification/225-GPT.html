@@ -11,16 +11,24 @@
         <div>
             <h2>今までの会話:</h2>
             <div>
-                {% for message in messages %}
-                    {% if message == "HumanMessage" %}
-                        <p><b>質問:</b> {{ message.content }}</p>
-                    {% else %}
-                        <p><b>GPTの回答:</b> {{ message.content }}</p>
-                    {% endif %}
-                {% endfor %}
+            {% for message in messages %}
+                {% if message.type == 'SystemMessage' %}
+                    <div class="system-message">
+                        <p>裏で開発者がAIに指示する部分: {{ message.content }}</p>
+                    </div>
+                {% elif message.type == 'HumanMessage' %}
+                    <div class="human-message">
+                        <p>質問: {{ message.content }}</p>
+                    </div>
+                {% elif message.type == 'AIMessage' %}
+                    <div class="ai-message">
+                        <p>GPTの回答: {{ message.content }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
             </div>
         </div>
-        <p>{{ messages}}</p>
+        <p>{{ messages }}</p>
     {% endif %}
 
     <form method="post">
