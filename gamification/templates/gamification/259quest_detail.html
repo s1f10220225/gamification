@@ -25,6 +25,11 @@
             cursor: pointer;
             text-decoration: underline;
         }
+        .delete {
+            color: red;
+            cursor: pointer;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -37,6 +42,8 @@
             状態: <span>{{ quest.status }}</span>
         </p>
         <a href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</a>
+        <br>
+        <a href="{% url 'delete_quest' quest.quest_id %}" class="delete" onclick="return confirm('本当にこのクエストを削除しますか？');">削除</a>
     </div>
 
     <a href="{% url 'quest' %}">クエストリストに戻る</a>

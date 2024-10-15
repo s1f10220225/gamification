@@ -1,3 +1,4 @@
+<!-- add_quest.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +20,7 @@
 <body>
     <h1>クエストを追加</h1>
     <div class="form-container">
-        <form method="post">
+        <form method="post" id="quest-form">
             {% csrf_token %}
             {% for field in form %}
                 <div class="form-group">
@@ -30,7 +31,30 @@
             {% endfor %}
             <button type="submit">追加</button>
         </form>
+        
+        <h2>要約を生成する</h2>
+        <textarea id="summary-input" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
+        <button id="generate-summary">要約を生成</button>
+        <div id="summary-result"></div>
     </div>
     <a href="{% url 'quest' %}">クエストリストに戻る</a>
+
+    <script>
+        document.getElementById('generate-summary').addEventListener('click', async function() {
+            const inputText = document.getElementById('summary-input').value;
+            if (inputText) {
+                const response = await fetch('/generate-summary/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ content: inputText })
+                });
+                const result = await response.json();
+                document.getElementById('summary-result').innerText = result.summary;
+            }
+        });
+    </script>
 </body>
 </html>
