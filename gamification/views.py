@@ -62,7 +62,7 @@ OPENAI_API_KEY = ""  # 必要に応じてセキュアに管理してください
 OPENAI_API_BASE = 'https://api.openai.iniad.org/api/v1'  # 正しいAPIベースURLに修正
 
 # ChatOpenAIインスタンスを初期化
-chat = ChatOpenAI(openai_api_key=OPENAI_API_KEY, openai_api_base=OPENAI_API_BASE, model_name='gpt-3.5-turbo', temperature=0)
+chat = ChatOpenAI(openai_api_key=OPENAI_API_KEY, openai_api_base=OPENAI_API_BASE, model_name='gpt-4o-mini', temperature=2)
 
 @csrf_exempt
 def generate_summary(request):
