@@ -43,7 +43,6 @@
             margin: 0;
         }
         .status {
-            font-weight: bold;
         }
     </style>
 </head>
@@ -57,10 +56,13 @@
         </div>
         <div class="status-container">
             <h2 class="user">
-                {{ status.user }}
+                {{ user.name }}
             </h2>
-            <p class="status-name">{{ status.status_name }}</p>
-            <p class="status-param">{{ status.parameter }}</p>
+            {% for s in status %}
+                <p class="status">{{ s.status_name }} : {{ s.parameter }}</p>
+            {% empty %}
+                <p class="status">登録されているステータスはありません。</p>
+            {% endfor %}
         </div>
     </div>
 </body>
