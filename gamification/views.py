@@ -58,7 +58,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # OpenAI APIキーやベースURLの設定
-OPENAI_API_KEY = "hoV-tFFZdgAJFDpMYYaxlGmaBKKOFjeG4zKs8gUBB1BFdq72r88B6oNY9jSB8Yk_OIt1PyWd1bO0mJuuIM4G5-g"  # 必要に応じてセキュアに管理してください
+OPENAI_API_KEY = ""  # 必要に応じてセキュアに管理してください
 OPENAI_API_BASE = 'https://api.openai.iniad.org/api/v1'  # 正しいAPIベースURLに修正
 
 # ChatOpenAIインスタンスを初期化
@@ -73,7 +73,7 @@ def generate_summary(request):
 
             # OpenAI APIを使用した要約処理
             messages = [
-                HumanMessage(content='30文字で要約してください'),
+                HumanMessage(content='100文字で要約してください'),
                 HumanMessage(content=content)
             ]
 
