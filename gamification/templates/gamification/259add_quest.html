@@ -17,36 +17,42 @@
         .container > div { /* 子要素にflexアイテムを適用 */
             flex: 1; /* 子要素がスペースを均等に分割 */
         }
+        .result{
+            display:inline-block;
+            padding:2em;/*内側余白*/
+            border:solid 2px #333;/*線の種類・太さ・色*/
+        }
     </style>
 </head>
-<body>
-    <h1>クエストを追加</h1>
-    <div class="container">
-        <div class="form-container">
-            <form method="post" id="quest-form">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                        {{ field.errors }}
-                    </div>
-                {% endfor %}
-                <button type="submit">追加</button>
-            </form>
-            <a href="{% url 'quest' %}">クエストリストに戻る</a>
-        </div> 
-        <div>
-            <h2>要約を生成する</h2>
-            <textarea id="summary-input" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
-            <button id="generate-summary">要約を生成</button>
-            <div id="summary-result"></div>
-            <h3>難易度生成（１から５段階)</h3>
-            <textarea id="summary-input2" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
-            <button id="generate-difficult">要約を生成</button>
-            <div id="difficulty-result"></div>
-        </div> 
+<h1>クエストを追加</h1>
+<div class="container">
+    <div class="form-container">
+        <form method="post" id="quest-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            <button type="submit">追加</button>
+        </form>
+        <a href="{% url 'quest' %}">クエストリストに戻る</a>
     </div> 
+    <div class="summary-container">
+        <h2>要約を生成する</h2>
+        <textarea id="summary-input" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
+        <button id="generate-summary">要約を生成</button>
+        <div id="summary-result" class="result"></div>
+    </div>
+    <div class="difficulty-container">
+        <h3>難易度生成（１から５段階)</h3>
+        <textarea id="summary-input2" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
+        <button id="generate-difficult">難易度を生成</button>
+        <div id="difficulty-result" class="result"></div>
+    </div>
+</div> 
     
     
 
