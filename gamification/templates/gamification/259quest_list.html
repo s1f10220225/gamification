@@ -65,12 +65,13 @@
             <p>クエスト</p>
             <p>ギルド</p>
             <p>パーティ</p>
+            <p><a href="{% url 'password' %}">password</a></p> <!-- a タグを使用 -->
         </div>
         <div class="quests-container">
             {% for quest in quests %}
                 <div class="quest-container">
                     <h2 class="quest-title">
-                        <a href="{% url 'quest_detail' quest_id=quest.quest_id %}">{{ quest.title }}</a>
+                        <a href="{% url 'quest_detail' quest_id=quest.pk %}">{{ quest.title }}</a>
                     </h2>
                     <p class="quest-detail">{{ quest.detail }}</p>
                     <p class="quest-meta">
