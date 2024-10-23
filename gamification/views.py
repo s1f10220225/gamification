@@ -5,7 +5,7 @@ from .forms import QuestForm  # QuestFormをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
 
@@ -63,7 +63,6 @@ def gpt(request):
     api_key = ''
     messages = []
     message_list = []
-    initialized = False
 
     # 2回目以降(POSTでリクエスト時)の処理
     if request.method == 'POST':
@@ -94,7 +93,6 @@ def gpt(request):
                 messages = [
                     SystemMessage(content="あなたは日本語を英語に翻訳するアシスタントです。ユーザーの日本語を英語に翻訳してください。")
                 ]
-                initialized = True # 初回フラグを設定
             
 
             messages.append(HumanMessage(content=question)) # 会話履歴(あれば)の最後に今回の質問を入れる
@@ -125,3 +123,20 @@ def gpt(request):
     }
 
     return render(request, "gamification/225-GPT.html", context)
+
+# 汎用版GPTの回答出力
+def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー、命令、渡すテキスト、答えの精度(0~2で、0に近いほど毎回同じ答えが返ってきやすい。)
+    base_url = "https://api.openai.iniad.org/api/v1"
+    model = "gpt-4o-mini"
+    chat = ChatOpenAI(openai_api_key=api_key, openai_api_base=base_url, model_name=model, temperature=temperature)
+
+    # 渡す会話を初期化
+    messages = [
+        SystemMessage(content=order),
+        HumanMessage(content=user_message)
+    ]
+
+    # 回答の生成
+    result = chat(messages)
+
+    return result.content  # AIの応答内容を返す
