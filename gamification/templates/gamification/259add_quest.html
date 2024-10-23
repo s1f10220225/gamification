@@ -35,7 +35,14 @@
         <h2>要約を生成する</h2>
         <textarea id="summary-input" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
         <button id="generate-summary">要約を生成</button>
+
         <div id="summary-result"></div>
+
+        <h3>難易度生成（１から５段階)</h3>
+        <textarea id="summary-input2" rows="4" cols="30" placeholder="要約する内容を入力してください"></textarea>
+        <button id="generate-difficult">要約を生成</button>
+
+        <div id="difficulty-result"></div>
     </div>
     <a href="{% url 'quest' %}">クエストリストに戻る</a>
 
@@ -53,6 +60,22 @@
                 });
                 const result = await response.json();
                 document.getElementById('summary-result').innerText = result.summary;
+            }
+        });
+
+        document.getElementById('generate-difficult').addEventListener('click', async function() {
+            const inputText = document.getElementById('summary-input2').value;
+            if (inputText) {
+                const response = await fetch('/generate-difficult/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ content: inputText })
+                });
+                const result = await response.json();
+                document.getElementById('difficulty-result').innerText = result.summary;
             }
         });
     </script>

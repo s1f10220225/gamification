@@ -58,7 +58,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # OpenAI APIキーやベースURLの設定
-OPENAI_API_KEY = ""  # 必要に応じてセキュアに管理してください
+OPENAI_API_KEY = "hoV-tFFZdgAJFDpMYYaxlGmaBKKOFjeG4zKs8gUBB1BFdq72r88B6oNY9jSB8Yk_OIt1PyWd1bO0mJuuIM4G5-g"  # 必要に応じてセキュアに管理してください
 OPENAI_API_BASE = 'https://api.openai.iniad.org/api/v1'  # 正しいAPIベースURLに修正
 
 # ChatOpenAIインスタンスを初期化
@@ -77,7 +77,34 @@ def generate_summary(request):
                 HumanMessage(content=content)
             ]
 
-            result = chat(messages)  # 前述のchatインスタンスを使用
+            result = chat.invoke(messages)  # 前述のchatインスタンスを使用
+            # resultの構造を確認した方が良い
+            summary = result.content if hasattr(result, 'content') else '要約の取得に失敗しました'
+            return JsonResponse({'summary': summary})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+#chat = ChatOpenAI(openai_api_key=OPENAI_API_KEY, openai_api_base=OPENAI_API_BASE, model_name='gpt-4o-mini', temperature=2)
+
+@csrf_exempt
+def generate_difficult(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            content = data.get('content', '')
+
+            # OpenAI APIを使用した要約処理
+            messages = [
+                HumanMessage(content='難易度を、1から5段階で答えてくださいあと、数字のみでお願いします'),
+                HumanMessage(content=content)
+            ]
+
+            result = chat.invoke(messages)  # 前述のchatインスタンスを使用
             # resultの構造を確認した方が良い
             summary = result.content if hasattr(result, 'content') else '要約の取得に失敗しました'
             return JsonResponse({'summary': summary})

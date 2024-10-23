@@ -10,4 +10,5 @@ urlpatterns = [
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
     path('quest/delete/<int:quest_id>/', views.delete_quest, name='delete_quest'),
     path('generate-summary/', views.generate_summary, name='generate_summary'),
+    path('generate-difficult/', views.generate_difficult, name='generate_difficult'),
 ]
