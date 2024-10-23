@@ -47,6 +47,7 @@ def accept_quest(request, quest_id):
         quest.status = '未受注'
         quest.save()
     return redirect('quest')  
+
 def delete_quest(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     quest.delete()
