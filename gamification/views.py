@@ -5,7 +5,7 @@ from .forms import QuestForm  # QuestFormをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
 
