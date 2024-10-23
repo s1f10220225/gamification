@@ -43,7 +43,9 @@ def accept_quest(request, quest_id):
     if quest.status == '未受注':
         quest.status = '受注'
         quest.save()
-
+    else:
+        quest.status = '未受注'
+        quest.save()
     return redirect('quest')  
 def delete_quest(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
@@ -58,7 +60,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # OpenAI APIキーやベースURLの設定
-OPENAI_API_KEY = ""  # 必要に応じてセキュアに管理してください
+OPENAI_API_KEY = "hoV-tFFZdgAJFDpMYYaxlGmaBKKOFjeG4zKs8gUBB1BFdq72r88B6oNY9jSB8Yk_OIt1PyWd1bO0mJuuIM4G5-g"  # 必要に応じてセキュアに管理してください
 OPENAI_API_BASE = 'https://api.openai.iniad.org/api/v1'  # 正しいAPIベースURLに修正
 
 # ChatOpenAIインスタンスを初期化
