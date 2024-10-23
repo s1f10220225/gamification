@@ -9,4 +9,5 @@ urlpatterns = [
     path('user/<int:user_id>/status/', views.display_status, name='display_status'),  # ステータス表示用のURL
     path('pass/', views.password2, name='password'),  # パスワード入力ページのURL
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
+    path('225/gpt', views.gpt, name='gpt'), # GPTと会話できるプロトタイプページ
 ]

@@ -17,8 +17,9 @@ cd パス
 python -m venv venv
 .\venv\Scripts\activate
 
-(仮想環境になってることを確認して)Djangoのインストール
+(仮想環境になってることを確認して)DjangoやOpenAI関連のインストール
 pip install django
+pip install openai langchain langchain-community langchain-core requests
 
 データベースの更新
 python manage.py makemigrations
