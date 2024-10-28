@@ -33,7 +33,7 @@ def add_quest(request):
 
 def display_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
-    status = Status.objects.filter(user=user.user_id)  # 取得したユーザーを使ってステータスを取得
+    status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
 def password(request):

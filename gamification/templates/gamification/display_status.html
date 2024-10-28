@@ -59,7 +59,7 @@
                 {{ user.name }}
             </h2>
             {% for s in status %}
-                <p class="status">{{ s.status_name }} : {{ s.parameter }}</p>
+                <p class="status">{{ s.category.status_name }} : {{ s.parameter }}</p>
             {% empty %}
                 <p class="status">登録されているステータスはありません。</p>
             {% endfor %}
