@@ -61,7 +61,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # OpenAI APIキーやベースURLの設定
-OPENAI_API_KEY = "hoV-tFFZdgAJFDpMYYaxlGmaBKKOFjeG4zKs8gUBB1BFdq72r88B6oNY9jSB8Yk_OIt1PyWd1bO0mJuuIM4G5-g"  # 必要に応じてセキュアに管理してください
+OPENAI_API_KEY = ""  # 必要に応じてセキュアに管理してください
 OPENAI_API_BASE = 'https://api.openai.iniad.org/api/v1'  # 正しいAPIベースURLに修正
 
 # ChatOpenAIインスタンスを初期化
@@ -81,7 +81,7 @@ def generate_summary(request):
             ]
 
             result = chat.invoke(messages)  # 前述のchatインスタンスを使用
-            # resultの構造を確認した方が良い
+            # resultの構造
             summary = result.content if hasattr(result, 'content') else '要約の取得に失敗しました'
             return JsonResponse({'summary': summary})
 
