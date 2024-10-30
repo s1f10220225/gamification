@@ -20,6 +20,11 @@
             font-size: 1em;
             color: #777;
         }
+        .receive {
+            color: red;
+            cursor: pointer;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -31,7 +36,9 @@
             予想時間: <span>{{ quest.time }}</span> |
             状態: <span>{{ quest.status }}</span>
         </p>
+        <a href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</a>
     </div>
+
     <a href="{% url 'quest' %}">クエストリストに戻る</a>
 </body>
 </html>

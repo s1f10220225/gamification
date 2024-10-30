@@ -6,19 +6,27 @@ from django.db import models
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)  # ユーザーの識別用ID
     name = models.CharField(max_length=100)  # ユーザーの名前
+    gpt_key = models.IntegerField(default=0) # ChatGPTのAPIキー
 
     def __str__(self):
         return f"{self.name} (ID: {self.user_id})"
+    
+# スキルカテゴリを管理するテーブル
+class Category(models.Model):
+    category_name = models.CharField(max_length=100)  # カテゴリ名
+    status_name = models.CharField(max_length=100)  # スキル名
 
+    def __str__(self):
+        return f"Category: {self.category_name}, Skill: {self.status_name}"
 
 # ユーザーの持つスキルを管理するテーブル
 class Status(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='statuses')  # ユーザーの識別用ID
-    status_name = models.CharField(max_length=100)  # スキル名
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='statuses', default=1)  # スキルカテゴリの識別用ID
     parameter = models.IntegerField()  # ステータスのパラメータ
 
     def __str__(self):
-        return f"{self.status_name} (Parameter: {self.parameter}, User: {self.user.user_id})"
+        return f"{self.category.status_name} (Parameter: {self.parameter}, User: {self.user.user_id})"
 
 
 # パーティーを管理するテーブル
@@ -61,3 +69,4 @@ class Manager(models.Model):
 
     def __str__(self):
         return f"Quest: {self.quest.quest_id}, Assignee: {self.assignee.user_id if self.assignee else 'None'}"
+    
