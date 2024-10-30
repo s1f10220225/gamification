@@ -10,4 +10,8 @@ urlpatterns = [
     path('pass/', views.password2, name='password'),  # パスワード入力ページのURL
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
     path('225/gpt', views.gpt, name='gpt'), # GPTと会話できるプロトタイプページ
+    path('party/create/', views.CreatePartyView.as_view(), name='create_party'),
+    path('party/<int:party_id>/', views.PartyDetailView.as_view(), name='party_detail'),
+    path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'),
+    path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'),
 ]

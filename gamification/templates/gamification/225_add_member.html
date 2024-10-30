@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Member</title>
+</head>
+<body>
+    <h2>Add a Member to {{ party.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="user_id">Select User:</label>
+        <select id="user_id" name="user_id">
+            {% for user in users %}
+                <option value="{{ user.user_id }}">{{ user.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="role">Role:</label>
+        <input type="text" id="role" name="role" required>
+        <button type="submit">Add Member</button>
+    </form>
+</body>
+</html>
