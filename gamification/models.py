@@ -17,7 +17,7 @@ class Category(models.Model):
     status_name = models.CharField(max_length=100)  # スキル名
 
     def __str__(self):
-        return f"Category: {self.category_name}, Skill: {self.skill_name}"
+        return f"Category: {self.category_name}, Skill: {self.status_name}"
 
 # ユーザーの持つスキルを管理するテーブル
 class Status(models.Model):
@@ -26,7 +26,7 @@ class Status(models.Model):
     parameter = models.IntegerField()  # ステータスのパラメータ
 
     def __str__(self):
-        return f"{self.status_name} (Parameter: {self.parameter}, User: {self.user.user_id})"
+        return f"{self.category.status_name} (Parameter: {self.parameter}, User: {self.user.user_id})"
 
 
 # パーティーを管理するテーブル
