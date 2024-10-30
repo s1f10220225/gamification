@@ -36,6 +36,10 @@ def display_status(request, user_id):
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
+def career_to_status(request, user_id): 
+    user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+    return render(request, 'gamification/career_to_status.html', {'user': user})  # 取得したユーザーをテンプレートに渡す
+
 def password(request):
     return render(request, "gamification/259pass.html")  # この関数は必要ないかも
 

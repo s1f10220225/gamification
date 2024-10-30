@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>キャリアをステータスに変換</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .left-space {
+            flex: 1;
+            background-color: #FFFFFF;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+        }
+        .left-space h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #141313;
+        }
+        .left-space p {
+            margin: 10px 0;
+            color: #000000;
+        }
+        .right-space {
+            flex: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            border-left: 3px solid #4F0909;
+            margin-left: -400px; /* 左端に移動させるため余白をマイナスに設定 */
+        }
+        .form-container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-space">
+            <h2>アプリ名</h2>
+            <p>クエスト</p>
+            <p>ギルド</p>
+            <p>パーティ</p>
+        </div> 
+    <div class="right-space"> 
+        <h1>キャリアを入力</h1> <!-- フォームは後ほど調整する -->
+        <div class="form-container"> 
+            <form method="post">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                <button type="submit">ステータスに変換</button>
+            </form>
+        </div>
+        <a href="{% url 'display_status' user.user_id %}">ステータスに戻る</a>
+    </div>
+</body>
+</html>

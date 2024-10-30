@@ -10,4 +10,5 @@ urlpatterns = [
     path('pass/', views.password2, name='password'),  # パスワード入力ページのURL
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
     path('225/gpt', views.gpt, name='gpt'), # GPTと会話できるプロトタイプページ
+    path('user/<int:user_id>/career_to_status/', views.career_to_status, name='career_to_status')
 ]
