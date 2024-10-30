@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamification</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // URLパラメータから画像パスを取得
+        const params = new URLSearchParams(window.location.search);
+        const image = params.get('image');
+
+        // 画像がある場合、その画像を背景に設定
+        if (image) {
+            document.body.style.backgroundImage = `url(${decodeURIComponent(image)})`;
+        }
+    </script>
+
+    <a href="224home.html">戻る</a>
+</body>
+</html>
