@@ -36,8 +36,8 @@ def display_status(request, user_id):
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
-#def password(request):
-#    return render(request, "gamification/259pass.html")  # この関数は必要ないかも
+def password(request):
+    return render(request, "gamification/259pass.html")  # この関数は必要ないかも
 
 def password2(request):
     if request.method == 'POST':
@@ -54,11 +54,6 @@ def accept_quest(request, quest_id):
     if quest.status == '未受注':
         quest.status = '受注'
         quest.save()
-    else:
-        quest.status = '未受注'
-        quest.save()
-    return redirect('quest')  
-
 
     return redirect('quest')  
 
@@ -145,75 +140,3 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー
     result = chat(messages)
 
     return result.content  # AIの応答内容を返す
-
-def delete_quest(request, quest_id):
-    quest = get_object_or_404(Quest, pk=quest_id)
-    quest.delete()
-    return redirect('quest')  # 削除後のリダイレクト先を指定
-#/////////////////
-# views.py
-from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-# OpenAI APIキーやベースURLの設定
-OPENAI_API_KEY = ""  # 必要に応じてセキュアに管理してください
-OPENAI_API_BASE = 'https://api.openai.iniad.org/api/v1'  # 正しいAPIベースURLに修正
-
-# ChatOpenAIインスタンスを初期化
-chat = ChatOpenAI(openai_api_key=OPENAI_API_KEY, openai_api_base=OPENAI_API_BASE, model_name='gpt-4o-mini', temperature=2)
-
-@csrf_exempt
-def generate_summary(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            content = data.get('content', '')
-
-            # OpenAI APIを使用した要約処理
-            messages = [
-                HumanMessage(content='100文字で要約してください'),
-                HumanMessage(content=content)
-            ]
-
-            result = chat.invoke(messages)  # 前述のchatインスタンスを使用
-            # resultの構造
-            summary = result.content if hasattr(result, 'content') else '要約の取得に失敗しました'
-            return JsonResponse({'summary': summary})
-
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
-#chat = ChatOpenAI(openai_api_key=OPENAI_API_KEY, openai_api_base=OPENAI_API_BASE, model_name='gpt-4o-mini', temperature=2)
-
-@csrf_exempt
-def generate_difficult(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            content = data.get('content', '')
-
-            # OpenAI APIを使用した要約処理
-            messages = [
-                HumanMessage(content='難易度を、1から5段階で答えてくださいあと、数字のみでお願いします'),
-                HumanMessage(content=content)
-            ]
-
-            result = chat.invoke(messages)  # 前述のchatインスタンスを使用
-            # resultの構造を確認した方が良い
-            summary = result.content if hasattr(result, 'content') else '要約の取得に失敗しました'
-            return JsonResponse({'summary': summary})
-
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
