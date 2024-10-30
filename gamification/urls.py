@@ -10,4 +10,6 @@ urlpatterns = [
     path('pass/', views.password2, name='password'),  # パスワード入力ページのURL
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
     path('225/gpt', views.gpt, name='gpt'), # GPTと会話できるプロトタイプページ
+    path('summary',views.get_gpt_response,name='summary'),#要約
+    path('diff',views.get_gpt_response,name='diff'),#難易度判定
 ]
