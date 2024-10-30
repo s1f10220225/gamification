@@ -21,9 +21,18 @@
             color: #777;
         }
         .receive {
-            color: red;
+            
             cursor: pointer;
             text-decoration: underline;
+        }
+        .delete {
+            
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .status {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -34,9 +43,12 @@
         <p class="quest-meta">
             難易度: <span>{{ quest.difficulty }}</span> |
             予想時間: <span>{{ quest.time }}</span> |
-            状態: <span>{{ quest.status }}</span>
+            状態: <span class="status">{{ quest.status }}</span>
         </p>
-        <a href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</a>
+        <a href="{% url 'accept_quest' quest.quest_id %}" class="receive"><strong>受ける</strong></a>
+        <a href="{% url 'accept_quest' quest.quest_id %}" class="receive"><strong>取り消し</strong></a>
+        <br>
+        <a href="{% url 'delete_quest' quest.quest_id %}" class="delete" onclick="return confirm('本当にこのクエストを削除しますか？');">削除</a>
     </div>
 
     <a href="{% url 'quest' %}">クエストリストに戻る</a>
