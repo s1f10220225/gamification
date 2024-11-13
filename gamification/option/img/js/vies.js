@@ -11,8 +11,8 @@ function displayRandomImage(category) {
             "../img/gamification/fun/9.png",
             "../img/gamification/fun/10.png",
             "../img/gamification/fun/11.png",
-            "../img/gamification/fun/16.png",
-            "../img/gamification/fun/17.png",
+            "../img/gamification/fun/16.jpg",
+            "../img/gamification/fun/17.jpg",
             
         ];
     } else if (category === 'danger') {
