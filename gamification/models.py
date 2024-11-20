@@ -6,7 +6,7 @@ from django.db import models
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)  # ユーザーの識別用ID
     name = models.CharField(max_length=100)  # ユーザーの名前
-    gpt_key = models.IntegerField(default=0) # ChatGPTのAPIキー
+    gpt_key = models.CharField(max_length=100, default=0) # ChatGPTのAPIキー
 
     def __str__(self):
         return f"{self.name} (ID: {self.user_id})"
