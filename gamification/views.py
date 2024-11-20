@@ -182,3 +182,7 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー
     result = chat(messages)
 
     return result.content  # AIの応答内容を返す
+#////////////////////////////////////////////////////////////////////////////
+def sample(request):
+    return render(request, "gamification/sample.html")
+
