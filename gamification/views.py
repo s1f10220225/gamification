@@ -41,19 +41,19 @@ def display_status(request, user_id):
 
 def career_to_status(request, user_id):
     if request.method == 'POST':
-        form = CareerForm(request.POST)
-        insert_forms = request.POST['career']
+        form = CareerForm(request.POST) # フォームの受信
+        insert_forms = request.POST['career'] # 受信したフォームからcareerを取り出す
         user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
-        status = Category.objects.all().values_list("status_name").order_by("category_name").distinct()
+        status = Category.objects.all().values_list("status_name").order_by("category_name").distinct() # ステータス一覧の取得(カテゴリーごとにソート)
         order = "これからとある人のキャリアを送ります。あなたはその人のキャリアからその人のステータスを作成してください。各ステータスは「'ステータス名:0から100の数値'」という形で表してください。存在するステータスは次の通りです。「"
         for s in status:
             order += s[0] + "、"
         order = order[:-1]
-        order += "」、これらの中からステータスをいくつか選んで数値化してください。ステータス名とその値以外の物を出力しないでください。"
-        api_key = user.gpt_key
+        order += "」、これらの中からステータスをいくつか選んで数値化してください。ステータス名とその値以外の物を出力しないでください。" # GPTに与える命令文
+        api_key = user.gpt_key # apiキーの取得
         try:
-            gpt_return = get_gpt_response(api_key, order, insert_forms, temperature=0.1)
-        except:
+            gpt_return = get_gpt_response(api_key, order, insert_forms, temperature=0.1) # APIを利用してGPTからの返答を得る
+        except: # エラーが起きた場合(主にAPIキーが違ったりする場合)
             gpt_return = "Invalid key error"
         if form.is_valid():
             return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return})
