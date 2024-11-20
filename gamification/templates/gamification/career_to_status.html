@@ -56,9 +56,11 @@
             <p>パーティ</p>
         </div> 
     <div class="right-space"> 
-        <h1>キャリアを入力</h1> <!-- フォームは後ほど調整する -->
+        <!-- フォームは後ほど調整する -->
         <div class="form-container"> 
+            <h1>キャリアを入力</h1>
             <form method="post">
+                {% csrf_token %}
                 {% for field in form %}
                     <div class="form-group">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -68,8 +70,9 @@
                 {% endfor %}
                 <button type="submit">ステータスに変換</button>
             </form>
+            <p>{{  gpt_return|linebreaksbr  }}</p>
+            <a href="{% url 'display_status' user.user_id %}">ステータスに戻る</a>
         </div>
-        <a href="{% url 'display_status' user.user_id %}">ステータスに戻る</a>
     </div>
 </body>
 </html>

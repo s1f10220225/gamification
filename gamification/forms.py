@@ -13,3 +13,6 @@ class QuestForm(forms.ModelForm):
             'difficulty': '難易度',
             'time': '予想時間',
         }
+
+class CareerForm(forms.Form):
+    career = forms.CharField()

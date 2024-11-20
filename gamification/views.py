@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-from .models import Quest,User,Status  # Quest,User,Statusモデルをインポート
-from .forms import QuestForm  # QuestFormをインポート
+from .models import Quest,User,Status,Category  # Quest,User,Statusモデルをインポート
+from .forms import QuestForm, CareerForm  # QuestForm,CareerFormをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
@@ -36,9 +36,29 @@ def display_status(request, user_id):
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
-def career_to_status(request, user_id): 
-    user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
-    return render(request, 'gamification/career_to_status.html', {'user': user})  # 取得したユーザーをテンプレートに渡す
+def career_to_status(request, user_id):
+    if request.method == 'POST':
+        form = CareerForm(request.POST)
+        insert_forms = request.POST['career']
+        user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+        status = Category.objects.all().values_list("status_name").order_by("category_name").distinct()
+        order = "これからとある人のキャリアを送ります。あなたはその人のキャリアからその人のステータスを作成してください。各ステータスは「'ステータス名:0から100の数値'」という形で表してください。存在するステータスは次の通りです。「"
+        for s in status:
+            order += s[0] + "、"
+        order = order[:-1]
+        order += "」、これらの中からステータスをいくつか選んで数値化してください。ステータス名とその値以外の物を出力しないでください。"
+        api_key = user.gpt_key
+        try:
+            gpt_return = get_gpt_response(api_key, order, insert_forms, temperature=0.1)
+        except:
+            gpt_return = "Invalid key error"
+        if form.is_valid():
+            return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return})
+    else:
+        form = CareerForm()
+        insert_forms = '初期値'
+        user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+        return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'insert_forms':insert_forms})  # 取得したユーザーをテンプレートに渡す
 
 def password(request):
     return render(request, "gamification/259pass.html")  # この関数は必要ないかも
