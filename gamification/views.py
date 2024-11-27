@@ -54,16 +54,16 @@ def career_to_status(request, user_id):
         api_key = user.gpt_key # apiキーの取得
         try:
             gpt_return = get_gpt_response(api_key, order, insert_forms, temperature=0.1) # APIを利用してGPTからの返答を得る
-            match = re.finditer(r'([a-zA-Z]+):\s*([0-9]+)', gpt_return)
+            match = re.finditer(r'([a-zA-Z]+):\s*([0-9]+)', gpt_return)  # 正規表現を用いて「スキル名:スキル値」を検索
             gpt_tuples = []
             for m in match:
-                gpt_tuples.append(m.groups())
+                gpt_tuples.append(m.groups())  # 「（スキル名,スキル値）」のタプルをリストに保存
             status_name = []
             status_value = []
             for t in gpt_tuples:
-                status_name.append(t[0])
-                status_value.append(t[1])
-            zip_status = zip(status_name, status_value)
+                status_name.append(t[0])  # スキル名をリストに保存
+                status_value.append(t[1])  # スキル値をリストに保存
+            zip_status = zip(status_name, status_value)  # スキル名、スキル値をまとめてとれるリスト作成
         except: # エラーが起きた場合(主にAPIキーが違ったりする場合)
             gpt_return = "Error"
             zip_status = []
