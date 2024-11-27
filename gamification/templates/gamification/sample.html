@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT 応答</title>
+</head>
+<body>
+    <div class="container">
+        <h1>GPTからの応答</h1>
+
+        <div class="response">
+            {% if response %}
+                <p>{{ response }}</p>
+            {% else %}
+                <p>応答がありません。再度試してください。</p>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'top' %}">戻る</a>  <!-- 必要に応じて戻るリンクを追加 -->
+    </div>
+</body>
+</html>
