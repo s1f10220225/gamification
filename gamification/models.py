@@ -1,12 +1,48 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-# Create your models here.
+# カスタムユーザーマネージャーの定義
+class CustomUserManager(BaseUserManager):
+    def create_user(self, name, gpt_key, password=None):
+        if not name:
+            raise ValueError('The Name field must be set')
+        user = self.model(name=name, gpt_key=gpt_key)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, name, gpt_key, password=None):
+        user = self.create_user(
+            name=name,
+            gpt_key=gpt_key,
+            password=password,
+        )
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+# カスタムユーザーモデルの定義
+class User(AbstractBaseUser, PermissionsMixin):
+    user_id = models.AutoField(primary_key=True)          # ユーザーの識別用ID。AutoFieldだからunique不要
+    name = models.CharField(max_length=100)               # ユーザーの名前
+    gpt_key = models.CharField(max_length=100, default=0) # ChatGPTのAPIキー
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'user_id'
+    REQUIRED_FIELDS = ['name', 'gpt_key']
+
+    def __str__(self):
+        return f"{self.name} (ID: {self.user_id})"
 
 # ユーザーを管理するテーブル
 class User(models.Model):
-    user_id = models.AutoField(primary_key=True)  # ユーザーの識別用ID
-    name = models.CharField(max_length=100)  # ユーザーの名前
-    gpt_key = models.CharField(max_length=100, default=0) # ChatGPTのAPIキー
+    user_id = models.AutoField(primary_key=True)  
+    name = models.CharField(max_length=100)  
+    gpt_key = models.CharField(max_length=100, default=0)
 
     def __str__(self):
         return f"{self.name} (ID: {self.user_id})"
