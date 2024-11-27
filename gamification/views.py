@@ -11,6 +11,7 @@ from langchain.agents import Tool, initialize_agent, AgentType
 from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
+import re # 正規表現による検索を行うため必要
 
 def top(request):
     return render(request, "gamification/top.html")
@@ -53,10 +54,21 @@ def career_to_status(request, user_id):
         api_key = user.gpt_key # apiキーの取得
         try:
             gpt_return = get_gpt_response(api_key, order, insert_forms, temperature=0.1) # APIを利用してGPTからの返答を得る
+            match = re.finditer(r'([a-zA-Z]+):\s*([0-9]+)', gpt_return)
+            gpt_tuples = []
+            for m in match:
+                gpt_tuples.append(m.groups())
+            status_name = []
+            status_value = []
+            for t in gpt_tuples:
+                status_name.append(t[0])
+                status_value.append(t[1])
+            zip_status = zip(status_name, status_value)
         except: # エラーが起きた場合(主にAPIキーが違ったりする場合)
-            gpt_return = "Invalid key error"
+            gpt_return = "Error"
+            zip_status = []
         if form.is_valid():
-            return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return})
+            return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return, 'status':zip_status})
     else:
         form = CareerForm()
         insert_forms = '初期値'
