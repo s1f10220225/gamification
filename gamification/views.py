@@ -30,8 +30,7 @@ def display_status(request, user_id):
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
-def password(request):
-    return render(request, "gamification/259pass.html")  # この関数は必要ないかも
+
 
 def password2(request):
     if request.method == 'POST':
@@ -176,7 +175,7 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
 
 
-# add_questとsample_returnの組み合わせ
+# add_questとsample_returnの組み合わせ クエストの追加と、要約作成
 def combined_view(request):
     form = QuestForm()  # フォームインスタンスを最初に作成
 
