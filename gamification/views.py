@@ -168,7 +168,7 @@ def gpt(request):
 
 def get_gpt_response(api_key, order, user_message, temperature=0.2):
     # APIキー、命令、渡すテキスト、答えの精度(0~2で、0に近いほど毎回同じ答えが返ってきやすい。)
-    base_url = "https://api.openai.com/v1"  # 正しいURLに修正
+    base_url = 'https://api.openai.iniad.org/api/v1' # 正しいURLに修正
     model = "gpt-4o-mini"
     chat = ChatOpenAI(openai_api_key=api_key, openai_api_base=base_url, model_name=model, temperature=temperature)
 
@@ -180,18 +180,15 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
     # 回答の生成
     result = chat(messages)
-
     return result.content  # AIの応答内容を返す
 
 
 def sample_return(request):
-    api_key = request.POST.get('api_key')  # POSTデータから取得
-    order = request.POST.get('order')  # POSTデータから取得
-    user_message = request.POST.get('user_message')  # POSTデータから取得
-    ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
+    if request.method == 'POST':
+        api_key = request.POST.get('api_key')
+        order = request.POST.get('order')
+        user_message = request.POST.get('user_message')
+        ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
+        return render(request, "gamification/sample.html", {"response": ans})
+    return render(request, "gamification/sample.html")  # GETリクエスト時には空の応答
 
-    return render(request, "gamification/sample.html", {"response": ans})  # コンテキストを辞書形式で渡す
-
-
-def sample(request):
-    return render(request, "gamification/sample.html")
