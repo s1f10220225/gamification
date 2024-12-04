@@ -23,16 +23,7 @@ def quest_detail(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     return render(request, "gamification/259quest_detail.html", {'quest': quest})
 
-def add_quest(request):
-    if request.method == 'POST':
-        form = QuestForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('quest')
-    else:
-        form = QuestForm()
 
-    return render(request, "gamification/259add_quest.html", {'form': form})  # フォームをテンプレートに渡す
 
 def display_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
@@ -46,7 +37,7 @@ def password2(request):
     if request.method == 'POST':
         input_password = request.POST.get('password2')
         if input_password == settings.PASSWORD:
-            return redirect('add_quest')
+            return redirect('sample_return2')
         else:
             return render(request, 'gamification/259pass.html', {'error': 'パスワードが正しくありません。'})
     return render(request, 'gamification/259pass.html')
@@ -183,18 +174,7 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
     return result.content  # AIの応答内容を返す
 
 
-def sample_return(request):
-    
-    if request.method == 'POST':
-        api_key = request.POST.get('api_key')
-        #order = request.POST.get('order')
-        #order = "文章を要約して、難易度（難易度の範囲は１から５）と、どのくらい時間（単位は月または、日にち）がかかるのか教えて"
-        order = "返事して"
-        user_message = request.POST.get('user_message')
-        ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
-        #return render(request, "gamification/sample.html", {"response": ans})
-        return render(request, "gamification/sample.html", {"response": ans})
-    return render(request, "gamification/sample.html")  # GETリクエスト時には空の応答
+
 
 # add_questとsample_returnの組み合わせ
 def combined_view(request):
