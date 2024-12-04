@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <title>AIの応答</title>
 </head>
+
 <body>
     <h1>AIの応答</h1>
 
@@ -28,5 +29,9 @@
         <h2>応答:</h2>
         <p>{{ response }}</p>
     {% endif %}
+
+
+    <a href="{% url 'quest' %}">クエストリストに戻る</a>
+
 </body>
 </html>

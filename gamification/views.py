@@ -188,9 +188,34 @@ def sample_return(request):
     if request.method == 'POST':
         api_key = request.POST.get('api_key')
         #order = request.POST.get('order')
-        order = "文章を要約して、難易度（難易度の範囲は１から５）と、どのくらい時間（単位は月または、日にち）がかかるのか教えて"
+        #order = "文章を要約して、難易度（難易度の範囲は１から５）と、どのくらい時間（単位は月または、日にち）がかかるのか教えて"
+        order = "返事して"
         user_message = request.POST.get('user_message')
         ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
+        #return render(request, "gamification/sample.html", {"response": ans})
         return render(request, "gamification/sample.html", {"response": ans})
     return render(request, "gamification/sample.html")  # GETリクエスト時には空の応答
 
+# add_questとsample_returnの組み合わせ
+def combined_view(request):
+    form = QuestForm()  # フォームインスタンスを最初に作成
+
+    if request.method == 'POST':
+        # QuestFormの処理
+        if 'quest_form' in request.POST:
+            form = QuestForm(request.POST)  # POSTデータでフォームを初期化
+            if form.is_valid():
+                form.save()
+                return redirect('quest')
+        
+        # sample_returnの処理
+        elif 'api_key' in request.POST:
+            api_key = request.POST.get('api_key')
+            order = "返事して"
+            user_message = request.POST.get('user_message')
+            ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
+
+            # sample.html（GPT応答が必要な場合のテンプレート）を使う
+            return render(request, "gamification/259add_quest.html", {"response": ans, 'form': form})
+
+    return render(request, "gamification/259add_quest.html", {'form': form})

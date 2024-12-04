@@ -15,5 +15,7 @@ urlpatterns = [
     path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'),  # メンバーの追加
     path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'),  # メンバーの削除
 
-    path('sample/1/', views.sample_return, name='sample_return'),  # 要約返答
+    #path('sample/1/', views.sample_return, name='sample_return'),  # 要約返答
+    #path('quest/add/', views.sample_return, name='sample_return'),  # 要約返答
+    path('sample/2/', views.combined_view, name='sample_return2'), 
 ]
