@@ -186,7 +186,8 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 def sample_return(request):
     if request.method == 'POST':
         api_key = request.POST.get('api_key')
-        order = request.POST.get('order')
+        #order = request.POST.get('order')
+        order = "文章を要約して、必要な資格や能力も書いてほしいまた、必要な能力と文章は改行して分けて"
         user_message = request.POST.get('user_message')
         ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
         return render(request, "gamification/sample.html", {"response": ans})
