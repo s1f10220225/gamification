@@ -1,16 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="ja">
-<head>
+<html>
+ <head>
+    <title>top</title>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="../../option/224toppage.css">
-</head>
+    <link href="{% static 'css/224toppage.css' %}" rel="stylesheet">
+ </head>
 <body>
     <div class="main">
+        <img src="{% static 'img/img/toppage.png' %}" alt="Background" class="background">
         <a href="" class="start">START</a>
     </div>
 
-    <script src="../../option/224toppage.js"></script>
 
 
 </body>

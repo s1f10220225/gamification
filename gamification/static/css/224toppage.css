@@ -1,27 +1,27 @@
-body{
-    
-
-}
-  
 
 .main{
-    background-image:url("../option/img/img/toppage.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
     position: relative;
-    background-position: center center;
     width: 100%;
     height: 100vh;
 
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
+.background{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
 .main:before{
     content: '';
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
     top: 0;
     right: 0;
@@ -39,22 +39,25 @@ a.start {
     color: #fff;
     text-transform: uppercase;
     text-decoration: none;
+    font-family: 'Press Start 2P', cursive; 
     background: linear-gradient(45deg, #838282, #b6b6b6);
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
   }
   
   a.start:hover {
+    background-position: 100%;
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.1);
   }
   
   a.start:active {
     transform: scale(0.95);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
   }
   
   a.start::before {
@@ -66,9 +69,18 @@ a.start {
     height: 100%;
     background: rgba(255, 255, 255, 0.2);
     transform: skewX(-45deg);
-    transition: left 0.5s;
+    transition: left 0.7s;
   }
   
   a.start:hover::before {
     left: 100%;
   }
+
+  body {
+    font-family: 'Press Start 2P', cursive;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    background-color: black; /* 余白の黒背景でゲームっぽさを演出 */
+    margin: 0;
+    padding: 0;
+}
