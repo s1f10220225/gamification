@@ -15,5 +15,6 @@ urlpatterns = [
     path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'), # メンバーの追加
     path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'), # メンバーの削除
     path('224toppage',views.toppage,name='toppage'),
+    path('224test',views.testoption,name='224test')
     
 ]

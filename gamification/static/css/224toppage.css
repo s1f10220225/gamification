@@ -69,18 +69,11 @@ a.start {
     height: 100%;
     background: rgba(255, 255, 255, 0.2);
     transform: skewX(-45deg);
-    transition: left 0.7s;
+    transition: left 0.4s;
   }
   
   a.start:hover::before {
     left: 100%;
   }
 
-  body {
-    font-family: 'Press Start 2P', cursive;
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    background-color: black; /* 余白の黒背景でゲームっぽさを演出 */
-    margin: 0;
-    padding: 0;
-}
+   
