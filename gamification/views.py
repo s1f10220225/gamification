@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-from .models import Quest,User,Status  # Quest,User,Statusモデルをインポート
+from .models import Quest, User, Status, Party, PartyBelonged  # Quest, User, Status, Party, PartyBelongedモデルをインポート
 from .forms import QuestForm  # QuestFormをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
+from django.views import View
+from django.urls import reverse
+
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
 from langchain_community.chat_models import ChatOpenAI
@@ -56,6 +59,45 @@ def accept_quest(request, quest_id):
         quest.save()
 
     return redirect('quest')  
+
+
+# パーティーの作成
+class CreatePartyView(View):
+    def get(self, request):
+        return render(request, 'gamification/225_create_party.html')
+
+    def post(self, request):
+        party_name = request.POST.get('party_name')
+        party = Party.objects.create(name=party_name)
+        return redirect(reverse('party_detail', args=[party.party_id]))
+
+class AddMemberView(View):
+    def get(self, request, party_id):
+        party = get_object_or_404(Party, pk=party_id)
+        users = User.objects.all()
+        return render(request, 'gamification/225_add_member.html', {'party': party, 'users': users})
+
+    def post(self, request, party_id):
+        party = get_object_or_404(Party, pk=party_id)
+        user_id = request.POST.get('user_id')
+        role = request.POST.get('role')
+        user = get_object_or_404(User, pk=user_id)
+        PartyBelonged.objects.create(party=party, user=user, role=role)
+        return redirect(reverse('party_detail', args=[party.party_id]))
+
+class RemoveMemberView(View):
+    def post(self, request, party_id, user_id):
+        party = get_object_or_404(Party, pk=party_id)
+        PartyBelonged.objects.filter(party=party, user_id=user_id).delete()
+        return redirect(reverse('party_detail', args=[party.party_id]))
+
+class PartyDetailView(View):
+    def get(self, request, party_id):
+        party = get_object_or_404(Party, pk=party_id)
+        members = PartyBelonged.objects.filter(party=party)
+        context = {'party': party, 'members': members}
+        return render(request, 'gamification/225_party_detail.html', context)
+
 
 # テンプレートには「誰が」「何をしゃべった」だけを送ってる
 # 裏で、セッションでJson形式で履歴保存

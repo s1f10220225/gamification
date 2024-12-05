@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Party Detail</title>
+</head>
+<body>
+    <h2>Party: {{ party.name }}</h2>
+    <h3>Members</h3>
+    <ul>
+        {% for member in members %}
+            <li>
+                Name: {{ member.user.name }}, Role: {{ member.role }}
+                <form method="post" action="{% url 'remove_member' party.party_id member.user.user_id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remove</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'add_member' party.party_id %}">Add Member</a>
+</body>
+</html>
