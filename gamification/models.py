@@ -5,9 +5,13 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 class CustomUserManager(BaseUserManager):
     def create_user(self, name, gpt_key, password=None):
         if not name:
-            raise ValueError('The Name field must be set')
+            raise ValueError('名前は必須です。')
+        if not gpt_key:
+            raise ValueError('GPTキーは必須かつ、ユニークな値です。')
         user = self.model(name=name, gpt_key=gpt_key)
         user.set_password(password)
+        user.save(using=self._db)
+        user.employee_number = f"INIAD{user.user_id:06}"  # user_idから社員番号を生成
         user.save(using=self._db)
         return user
 
@@ -24,28 +28,21 @@ class CustomUserManager(BaseUserManager):
 
 # カスタムユーザーモデルの定義
 class User(AbstractBaseUser, PermissionsMixin):
-    user_id = models.AutoField(primary_key=True)          # ユーザーの識別用ID。AutoFieldだからunique不要
-    name = models.CharField(max_length=100)               # ユーザーの名前
-    gpt_key = models.CharField(max_length=100, default=0) # ChatGPTのAPIキー
+    user_id = models.AutoField(primary_key=True)            # ユーザーの識別用ID。AutoFieldだからunique不要
+    employee_number = models.CharField(max_length=100, unique=True)  # 社員番号
+    name = models.CharField(max_length=100)                 # ユーザーの名前
+    gpt_key = models.CharField(max_length=100) # ChatGPTのAPIキー
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'user_id'
-    REQUIRED_FIELDS = ['name', 'gpt_key']
+    USERNAME_FIELD = 'employee_number'    # ログイン時に使うpassword以外のやつ
+    REQUIRED_FIELDS = ['name', 'gpt_key'] # スーパーユーザーとか、手動で作成するときに入れるやつ
 
     def __str__(self):
         return f"{self.name} (ID: {self.user_id})"
 
-# ユーザーを管理するテーブル
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)  
-    name = models.CharField(max_length=100)  
-    gpt_key = models.CharField(max_length=100, default=0)
-
-    def __str__(self):
-        return f"{self.name} (ID: {self.user_id})"
     
 # スキルカテゴリを管理するテーブル
 class Category(models.Model):
