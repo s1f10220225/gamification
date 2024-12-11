@@ -190,7 +190,7 @@ def combined_view(request):
         # sample_returnの処理
         elif 'api_key' in request.POST:
             api_key = request.POST.get('api_key')
-            order = "返事して"
+            order = "文章の要約をお願い。要点をまとめるようにしてまた、難易度[AからG]とどのくらいの期間が必要かを書いてほしい"
             user_message = request.POST.get('user_message')
             ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
 
