@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from .models import Quest, User, Status, Party, PartyBelonged  # Quest, User, Status, Party, PartyBelongedモデルをインポート
-from .forms import QuestForm  # QuestFormをインポート
+from .forms import QuestForm, SignUpForm  # Formをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 from django.views import View
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth import login
+from django.views.generic.edit import CreateView
 
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
@@ -182,3 +184,14 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー
     result = chat(messages)
 
     return result.content  # AIの応答内容を返す
+
+class SignUp(CreateView):
+    form_class = SignUpForm
+    template_name = "gamification/signup.html" 
+    success_url = reverse_lazy('top')
+
+    def form_valid(self, form):
+        user = form.save() # formの情報を保存
+        login(self.request, user) # 認証
+        self.object = user 
+        return HttpResponseRedirect(self.get_success_url()) # リダイレクト

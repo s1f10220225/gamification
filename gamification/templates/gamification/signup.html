@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>サインアップ</title>
+</head>
+
+<body>
+
+    <div class="signup-container">
+        <h2>サインアップ</h2>
+        <form method="post">
+            {% csrf_token %}
+            <!-- フォームのエラーメッセージを表示 -->
+            {% if form.errors %}
+            <div class="error-messages">
+                <p>入力内容に誤りがあります。もう一度確認してください。</p>
+            </div>
+            {% endif %}
+
+            <!-- フォームのフィールドをループして表示 -->
+            {{ form.non_field_errors }}
+            <div class="form-fields">
+                {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    <!-- フィールドのラベル -->
+                    {{ field }}
+                    <!-- フィールドの入力欄 -->
+                    {% if field.errors %}
+                    <div class="field-errors">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 送信ボタン -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">サインアップ</button>
+            </div>
+        </form>
+
+        <!-- ログインページへのリンク -->
+        <!-- <p>すでにアカウントをお持ちですか？ <a href="% url 'login' %}">こちらからログイン</a></p> -->
+    </div>
+
+</body>
+
+</html>

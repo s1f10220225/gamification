@@ -126,3 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PASSWORD = 'aaaaa'
 
 AUTH_USER_MODEL ='gamification.User'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'top'
+LOGOUT_REDIRECT_URL = 'top'

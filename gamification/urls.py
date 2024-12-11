@@ -14,4 +14,5 @@ urlpatterns = [
     path('party/<int:party_id>/', views.PartyDetailView.as_view(), name='party_detail'), # パーティーの詳細(メンバー一覧)
     path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'), # メンバーの追加
     path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'), # メンバーの削除
+    path('accounts/signup/', views.SignUp.as_view(), name='signup')
 ]
