@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-    <h1>クエストを追加</h1>
+    <h1>要約作成</h1>
     
     <div class="form-container">
         <form method="POST">
@@ -31,8 +31,11 @@
             <input type="submit" value="送信">
         </form>
     </div>
-
-    <h1>要約作成</h1>
+    {% if response %}
+        <h2>応答:</h2>
+        <p>{{ response }}</p>
+    {% endif %}
+    <h1>クエスト追加</h1>
 
     <div class="form-container">
         <form method="post">
@@ -48,10 +51,6 @@
         </form>
     </div>
 
-    {% if response %}
-        <h2>応答:</h2>
-        <p>{{ response }}</p>
-    {% endif %}
     
     <a href="{% url 'quest' %}">クエストリストに戻る</a>
 </body>
