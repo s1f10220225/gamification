@@ -46,9 +46,11 @@ def career_to_status(request, user_id):
         insert_forms = request.POST['career'] # 受信したフォームからcareerを取り出す
         user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
         status = Category.objects.all().values_list("status_name").order_by("category_name").distinct() # ステータス一覧の取得(カテゴリーごとにソート)
+        status_list = [] #後々使う処理のため存在するステータスを記録するリスト
         order = "これからとある人のキャリアを送ります。あなたはその人のキャリアからその人のステータスを作成してください。各ステータスは「'ステータス名:0から100の数値'」という形で表してください。存在するステータスは次の通りです。「"
         for s in status:
             order += s[0] + "、"
+            status_list.append(s[0])
         order = order[:-1]
         order += "」、これらの中からステータスをいくつか選んで数値化してください。ステータス名とその値以外の物を出力しないでください。" # GPTに与える命令文
         api_key = user.gpt_key # apiキーの取得
@@ -63,17 +65,37 @@ def career_to_status(request, user_id):
             for t in gpt_tuples:
                 status_name.append(t[0])  # スキル名をリストに保存
                 status_value.append(t[1])  # スキル値をリストに保存
+            for s in status_list: #GPTの出力になかったステータスに0を代入する処理
+                if s not in status_name:
+                    status_name.append(s)
+                    status_value.append(0)
             zip_status = zip(status_name, status_value)  # スキル名、スキル値をまとめてとれるリスト作成
         except: # エラーが起きた場合(主にAPIキーが違ったりする場合)
             gpt_return = "Error"
             zip_status = []
-        if form.is_valid():
-            return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return, 'status':zip_status})
+        try: #データベースに保存する処理
+            for s_name, s_value in zip(status_name, status_value):
+                u = user
+                c = Category.objects.filter(status_name=s_name)[0]
+                p = s_value
+                try: #データベースに値が存在する場合
+                    objects = Status.objects.filter(user=u, category=c)
+                    obj = objects[0]
+                    obj.parameter = p
+                    obj.save()
+                except: #データベースに値が存在しなかった場合
+                    new = {'user':u, 'category':c, 'parameter':p}
+                    obj = Status(**new)
+                    obj.save()
+            submit_status = "All submit succeeded"
+        except: #途中で登録に失敗した場合
+            submit_status = "Some submit failed"
+        return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return, 'status':zip_status, 'submit':submit_status})
     else:
         form = CareerForm()
         insert_forms = '初期値'
         user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
-        return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'insert_forms':insert_forms})  # 取得したユーザーをテンプレートに渡す
+        return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'insert_forms':insert_forms, 'submit':"Not submitted"})  # 取得したユーザーをテンプレートに渡す
 
 def password(request):
     return render(request, "gamification/259pass.html")  # この関数は必要ないかも

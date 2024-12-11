@@ -57,23 +57,27 @@
         </div> 
     <div class="right-space"> 
         <div class="form-container"> 
-            <h1>キャリアを入力</h1>
-            <form method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                        {{ field.errors }}
-                    </div>
+            {% if not status %}
+                <h1>キャリアを入力</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" name="submit">ステータスに変換して登録</button>
+                </form>
+            {% endif %}
+            {% if status %}
+                <h2>登録されたステータス</h2>
+                {% for s,v in status %}
+                    <p>{{s}}:{{v}}</p>
                 {% endfor %}
-                <button type="submit">ステータスに変換</button>
-            </form>
-            {% for s,v in status %}
-                <p>{{s}}:{{v}}</p>
-            {% empty %}
-                <p>ここにステータスが出力されます</p>
-            {% endfor %}
+                <p>Submit status: {{ submit }} </p>
+            {% endif %}
             <a href="{% url 'display_status' user.user_id %}">ステータスに戻る</a>
         </div>
     </div>
