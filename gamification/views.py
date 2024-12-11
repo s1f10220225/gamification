@@ -211,3 +211,18 @@ def combined_view(request):
         'response': response,
         'api_key': api_key  # APIキーも保持
     })
+
+
+from django.shortcuts import render, redirect
+from .forms import QuestForm
+
+def create_quest(request):
+    if request.method == 'POST':
+        form = QuestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('success')  # 成功した場合のリダイレクト先を指定
+    else:
+        form = QuestForm()
+    
+    return render(request, 'gamification/create_quest.html', {'form': form})

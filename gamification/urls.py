@@ -18,5 +18,6 @@ urlpatterns = [
     path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'),  # メンバーの削除
 
 
+    path('create_quest/', views.create_quest, name='create_quest'),
     path('sample/2/', views.combined_view, name='sample_return2'), 
 ]
