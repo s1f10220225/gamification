@@ -175,26 +175,39 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
 
 
-# add_questとsample_returnの組み合わせ クエストの追加と、要約作成
 def combined_view(request):
     form = QuestForm()  # フォームインスタンスを最初に作成
+    user_message = ''  
+    api_key = ''  # APIキーを保持
+    response = ''
 
     if request.method == 'POST':
-        # QuestFormの処理
         if 'quest_form' in request.POST:
-            form = QuestForm(request.POST)  # POSTデータでフォームを初期化
+            form = QuestForm(request.POST)
             if form.is_valid():
                 form.save()
                 return redirect('quest')
-        
-        # sample_returnの処理
+
         elif 'api_key' in request.POST:
-            api_key = request.POST.get('api_key')
+            api_key = request.POST.get('api_key', '')  # APIキーを保持
             order = "文章の要約をお願い。要点をまとめるようにしてまた、難易度[AからG]とどのくらいの期間が必要かを書いてほしい"
-            user_message = request.POST.get('user_message')
-            ans = get_gpt_response(api_key, order, user_message, temperature=0.2)
+            user_message = request.POST.get('user_message', '')
 
-            # sample.html（GPT応答が必要な場合のテンプレート）を使う
-            return render(request, "gamification/259add_quest.html", {"response": ans, 'form': form})
+            try:
+                response = get_gpt_response(api_key, order, user_message, temperature=0.2)
+            except Exception as e:
+                response = f"エラーが発生しました: {str(e)}"
 
-    return render(request, "gamification/259add_quest.html", {'form': form})
+            return render(request, "gamification/259add_quest.html", {
+                "response": response,
+                'form': form,
+                'user_message': user_message,
+                'api_key': api_key  # APIキーをコンテキストに追加
+            })
+
+    return render(request, "gamification/259add_quest.html", {
+        'form': form,
+        'user_message': user_message,
+        'response': response,
+        'api_key': api_key  # APIキーも保持
+    })
