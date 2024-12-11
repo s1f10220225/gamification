@@ -24,16 +24,7 @@ def quest_detail(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     return render(request, "gamification/259quest_detail.html", {'quest': quest})
 
-def add_quest(request):
-    if request.method == 'POST':
-        form = QuestForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('quest')
-    else:
-        form = QuestForm()
 
-    return render(request, "gamification/259add_quest.html", {'form': form})  # フォームをテンプレートに渡す
 
 def display_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
@@ -104,7 +95,7 @@ def password2(request):
     if request.method == 'POST':
         input_password = request.POST.get('password2')
         if input_password == settings.PASSWORD:
-            return redirect('add_quest')
+            return redirect('sample_return2')
         else:
             return render(request, 'gamification/259pass.html', {'error': 'パスワードが正しくありません。'})
     return render(request, 'gamification/259pass.html')
@@ -224,9 +215,9 @@ def gpt(request):
 
     return render(request, "gamification/225-GPT.html", context)
 
-# 汎用版GPTの回答出力
-def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー、命令、渡すテキスト、答えの精度(0~2で、0に近いほど毎回同じ答えが返ってきやすい。)
-    base_url = "https://api.openai.iniad.org/api/v1"
+def get_gpt_response(api_key, order, user_message, temperature=0.2):
+    # APIキー、命令、渡すテキスト、答えの精度(0~2で、0に近いほど毎回同じ答えが返ってきやすい。)
+    base_url = 'https://api.openai.iniad.org/api/v1' # 正しいURLに修正
     model = "gpt-4o-mini"
     chat = ChatOpenAI(openai_api_key=api_key, openai_api_base=base_url, model_name=model, temperature=temperature)
 
@@ -238,5 +229,44 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー
 
     # 回答の生成
     result = chat(messages)
-
     return result.content  # AIの応答内容を返す
+
+
+
+
+def combined_view(request):
+    form = QuestForm()  # フォームインスタンスを最初に作成
+    user_message = ''  
+    api_key = ''  # APIキーを保持
+    response = ''
+
+    if request.method == 'POST':
+        if 'quest_form' in request.POST:
+            form = QuestForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('quest')
+
+        elif 'api_key' in request.POST:
+            api_key = request.POST.get('api_key', '')  # APIキーを保持
+            order = "文章の要約をお願い。要点をまとめるようにしてまた、難易度[AからG]とどのくらいの期間が必要かを書いてほしい"
+            user_message = request.POST.get('user_message', '')
+
+            try:
+                response = get_gpt_response(api_key, order, user_message, temperature=0.2)
+            except Exception as e:
+                response = f"エラーが発生しました: {str(e)}"
+
+            return render(request, "gamification/259add_quest.html", {
+                "response": response,
+                'form': form,
+                'user_message': user_message,
+                'api_key': api_key  # APIキーをコンテキストに追加
+            })
+
+    return render(request, "gamification/259add_quest.html", {
+        'form': form,
+        'user_message': user_message,
+        'response': response,
+        'api_key': api_key  # APIキーも保持
+    })

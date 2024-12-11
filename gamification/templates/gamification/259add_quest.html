@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+!DOCTYPE html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>クエストを追加</title>
@@ -17,20 +17,41 @@
     </style>
 </head>
 <body>
-    <h1>クエストを追加</h1>
+    <h1>要約作成</h1>
+    
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            <label for="api_key">APIキー:</label><br>
+            <input type="text" id="api_key" name="api_key" value="{{ api_key }}" required><br>
+
+            <label for="user_message">メッセージ:</label><br>
+            <textarea id="user_message" name="user_message" required>{{ user_message }}</textarea><br><br>
+
+            <input type="submit" value="送信">
+        </form>
+    </div>
+    {% if response %}
+        <h2>応答:</h2>
+        <p>{{ response }}</p>
+    {% endif %}
+    <h1>クエスト追加</h1>
+
     <div class="form-container">
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
                 <div class="form-group">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
+                    {{ field }}  <!-- ここでフォームフィールドの表現を保持 -->
                     {{ field.errors }}
                 </div>
             {% endfor %}
             <button type="submit">追加</button>
         </form>
     </div>
+
+    
     <a href="{% url 'quest' %}">クエストリストに戻る</a>
 </body>
 </html>
