@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseRedirect
 from .models import Quest, User, Status, Party, PartyBelonged  # Quest, User, Status, Party, PartyBelongedモデルをインポート
-from .forms import QuestForm, SignUpForm  # Formをインポート
+from .forms import QuestForm, SignUpForm, LoginForm   # Formをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 from django.views import View
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 
 # ChatGPT関連
@@ -185,6 +186,9 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー
 
     return result.content  # AIの応答内容を返す
 
+
+
+## ユーザー認証システム
 class SignUp(CreateView):
     form_class = SignUpForm
     template_name = "gamification/signup.html" 
@@ -193,5 +197,18 @@ class SignUp(CreateView):
     def form_valid(self, form):
         user = form.save() # formの情報を保存
         login(self.request, user) # 認証
-        self.object = user 
+        self.object = user
         return HttpResponseRedirect(self.get_success_url()) # リダイレクト
+
+# サインアップ後の画面
+def signup_complete(request):
+    employee_number = request.GET.get('employee_number', None)
+    context = {
+        'employee_number': employee_number,
+    }
+    return render(request, 'gamification/signup_complete.html', context)
+
+# ログイン時のフォーム表示(デフォルトだと社員番号がカラム名になるため)
+class LoginView(LoginView):
+    authentication_form = LoginForm
+    template_name = 'gamification/login.html'

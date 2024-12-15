@@ -3,9 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 # カスタムユーザーマネージャーの定義
 class CustomUserManager(BaseUserManager):
-    def create_user(self, employee_number, name, gpt_key, password=None):
-        if not employee_number:
-            raise ValueError('社員番号は必須です。')
+    def create_user(self, name, gpt_key, password=None):
         if not name:
             raise ValueError('名前は必須です。')
         if not gpt_key:
@@ -18,9 +16,8 @@ class CustomUserManager(BaseUserManager):
         print(f"正しい社員番号: INIAD{user.user_id:06}")
         return user
 
-    def create_superuser(self, employee_number, name, gpt_key, password=None):
+    def create_superuser(self, name, gpt_key, password=None):
         user = self.create_user(
-            employee_number=employee_number,
             name=name,
             gpt_key=gpt_key,
             password=password,
