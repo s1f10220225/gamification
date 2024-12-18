@@ -7,8 +7,8 @@
 <body>
     <h2>サインアップが完了しました。</h2>
     <p>今後ログイン時に必要となるため、以下の情報を控えておいてください。</p>
-    <p>社員番号: {{ employee_number }}</p>
+    <p>社員番号:  {{ user.employee_number }}</p>
     <p>パスワード: あなたの設定したパスワード</p>
-    <a href="{% url 'login' %}">ログインページへ</a>
+    <a href="{% url 'top' %}">トップページへ</a>
 </body>
 </html>
