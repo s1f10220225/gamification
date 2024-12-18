@@ -17,6 +17,4 @@ urlpatterns = [
     path('create_quest/', views.create_quest, name='create_quest'),
     path('summary', views.summary, name='summary'),
     path('delete_quest/<int:quest_id>/', views.delete_quest, name='delete_quest'),
-    
-
 ]
