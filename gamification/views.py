@@ -1,19 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseRedirect
-from .models import Quest, User, Status, Party, PartyBelonged  # Quest, User, Status, Party, PartyBelongedモデルをインポート
-from .forms import QuestForm, SignUpForm, LoginForm   # Formをインポート
+from .models import Quest, User, Status, Party, PartyBelonged, Category  # Quest, User, Status, Party, PartyBelonged, Categoryモデルをインポート
+from .forms import QuestForm, SignUpForm, LoginForm, CareerForm   # Formをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 from django.views import View
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
+import re # 正規表現による検索を行うため必要
 
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
 from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
+
 
 def top(request):
     return render(request, "gamification/top.html")
@@ -26,14 +28,70 @@ def quest_detail(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     return render(request, "gamification/259quest_detail.html", {'quest': quest})
 
-
-
 def display_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
+def career_to_status(request, user_id):
+    if request.method == 'POST':
+        form = CareerForm(request.POST) # フォームの受信
+        insert_forms = request.POST['career'] # 受信したフォームからcareerを取り出す
+        user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+        status = Category.objects.all().values_list("status_name").order_by("category_name").distinct() # ステータス一覧の取得(カテゴリーごとにソート)
+        status_list = [] #後々使う処理のため存在するステータスを記録するリスト
+        order = "これからとある人のキャリアを送ります。あなたはその人のキャリアからその人のステータスを作成してください。各ステータスは「'ステータス名:0から100の数値'」という形で表してください。存在するステータスは次の通りです。「"
+        for s in status:
+            order += s[0] + "、"
+            status_list.append(s[0])
+        order = order[:-1]
+        order += "」、これらの中からステータスをいくつか選んで数値化してください。ステータス名とその値以外の物を出力しないでください。" # GPTに与える命令文
+        api_key = user.gpt_key # apiキーの取得
+        try:
+            gpt_return = get_gpt_response(api_key, order, insert_forms, temperature=0.1) # APIを利用してGPTからの返答を得る
+            match = re.finditer(r'([a-zA-Z]+):\s*([0-9]+)', gpt_return)  # 正規表現を用いて「スキル名:スキル値」を検索
+            gpt_tuples = []
+            for m in match:
+                gpt_tuples.append(m.groups())  # 「（スキル名,スキル値）」のタプルをリストに保存
+            status_name = []
+            status_value = []
+            for t in gpt_tuples:
+                status_name.append(t[0])  # スキル名をリストに保存
+                status_value.append(t[1])  # スキル値をリストに保存
+            for s in status_list: #GPTの出力になかったステータスに0を代入する処理
+                if s not in status_name:
+                    status_name.append(s)
+                    status_value.append(0)
+            zip_status = zip(status_name, status_value)  # スキル名、スキル値をまとめてとれるリスト作成
+        except: # エラーが起きた場合(主にAPIキーが違ったりする場合)
+            gpt_return = "Error"
+            zip_status = []
+        try: #データベースに保存する処理
+            for s_name, s_value in zip(status_name, status_value):
+                u = user
+                c = Category.objects.filter(status_name=s_name)[0]
+                p = s_value
+                try: #データベースに値が存在する場合
+                    objects = Status.objects.filter(user=u, category=c)
+                    obj = objects[0]
+                    obj.parameter = p
+                    obj.save()
+                except: #データベースに値が存在しなかった場合
+                    new = {'user':u, 'category':c, 'parameter':p}
+                    obj = Status(**new)
+                    obj.save()
+            submit_status = "All submit succeeded"
+        except: #途中で登録に失敗した場合
+            submit_status = "Some submit failed"
+        return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'gpt_return':gpt_return, 'status':zip_status, 'submit':submit_status})
+    else:
+        form = CareerForm()
+        insert_forms = '初期値'
+        user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+        return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'insert_forms':insert_forms, 'submit':"Not submitted"})  # 取得したユーザーをテンプレートに渡す
 
+def password(request):
+    return render(request, "gamification/259pass.html")  # この関数は必要ないかも
 
 def password2(request):
     if request.method == 'POST':
@@ -52,7 +110,6 @@ def accept_quest(request, quest_id):
         quest.save()
 
     return redirect('quest')  
-
 
 # パーティーの作成
 class CreatePartyView(View):
@@ -90,7 +147,6 @@ class PartyDetailView(View):
         members = PartyBelonged.objects.filter(party=party)
         context = {'party': party, 'members': members}
         return render(request, 'gamification/225_party_detail.html', context)
-
 
 # テンプレートには「誰が」「何をしゃべった」だけを送ってる
 # 裏で、セッションでJson形式で履歴保存

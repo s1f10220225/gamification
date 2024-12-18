@@ -26,3 +26,7 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label='社員番号')
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput)
+
+
+class CareerForm(forms.Form):
+    career = forms.CharField()
