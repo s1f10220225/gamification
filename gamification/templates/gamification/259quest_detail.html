@@ -25,6 +25,15 @@
             cursor: pointer;
             text-decoration: underline;
         }
+        .delete {
+            color: white;
+            background-color: red;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -37,6 +46,12 @@
             状態: <span>{{ quest.status }}</span>
         </p>
         <a href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</a>
+        <br>
+        <!-- 削除ボタンの追加 -->
+        <form method="post" action="{% url 'delete_quest' quest_id=quest.quest_id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="delete">削除</button>
+        </form>
     </div>
 
     <a href="{% url 'quest' %}">クエストリストに戻る</a>

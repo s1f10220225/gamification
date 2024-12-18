@@ -210,3 +210,16 @@ def create_quest(request):
         form = QuestForm()
 
     return render(request, 'gamification/create_quest.html', {'form': form})
+
+from django.http import HttpResponseRedirect
+
+from .models import Quest
+def delete_quest(request, quest_id):
+    
+    quest = get_object_or_404(Quest, quest_id=quest_id) 
+
+    if request.method == 'POST':
+        quest.delete()  
+        return HttpResponseRedirect(reverse('quest'))  
+
+    return render(request, "gamification/259quest_list.html", {'quest': quest})
