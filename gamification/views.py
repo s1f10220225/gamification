@@ -187,5 +187,3 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2): # APIキー
 def toppage(request):
     return render(request, "gamification/224toppage.html") 
 
-def testoption(request):
-    return render(request,"gamification/224test.html")
