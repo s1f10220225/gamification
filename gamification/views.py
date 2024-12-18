@@ -36,7 +36,7 @@ def password2(request):
     if request.method == 'POST':
         input_password = request.POST.get('password2')
         if input_password == settings.PASSWORD:
-            return redirect('sample_return2')
+            return redirect('summary')
         else:
             return render(request, 'gamification/259pass.html', {'error': 'パスワードが正しくありません。'})
     return render(request, 'gamification/259pass.html')

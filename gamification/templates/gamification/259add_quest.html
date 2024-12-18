@@ -31,7 +31,7 @@
             <button type="submit">クエストを作成</button>
         </form>
         
-        <h1>GPT API 呼び出し</h1>
+        <h1>文章の要約</h1>
         <form method="POST" action="{% url 'summary' %}"> 
             {% csrf_token %}
             <div class="form-group">
@@ -42,7 +42,7 @@
                 <label for="user_message">ユーザーメッセージ:</label><br>
                 <textarea id="user_message" name="user_message"></textarea>
             </div>
-            <button type="submit">APIリクエストを送信</button>
+            <button type="submit">開始</button>
         </form>
 
         {% if response %}
