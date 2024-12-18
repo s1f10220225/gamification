@@ -5,13 +5,14 @@ from .forms import QuestForm, CareerForm  # QuestForm,CareerFormをインポー�
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 from django.views import View
 from django.urls import reverse
+import re # 正規表現による検索を行うため必要
 
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
 from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
-import re # 正規表現による検索を行うため必要
+
 
 def top(request):
     return render(request, "gamification/top.html")
