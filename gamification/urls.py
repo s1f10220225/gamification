@@ -8,17 +8,16 @@ urlpatterns = [
     path('user/<int:user_id>/status/', views.display_status, name='display_status'),  # ステータス表示用のURL
     path('pass/', views.password2, name='password'),  # パスワード入力ページのURL
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
-    path('225/gpt/', views.gpt, name='gpt'),  # GPTと会話できるプロトタイプページ
-    path('party/create/', views.CreatePartyView.as_view(), name='create_party'),  # パーティー作成
-    path('party/<int:party_id>/', views.PartyDetailView.as_view(), name='party_detail'),  # パーティーの詳細(メンバー一覧)
-    path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'),  # メンバーの追加
-    path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'),  # メンバーの削除
-
-
+    path('225/gpt', views.gpt, name='gpt'), # GPTと会話できるプロトタイプページ
+    path('party/create/', views.CreatePartyView.as_view(), name='create_party'), # パーティー作成
+    path('party/<int:party_id>/', views.PartyDetailView.as_view(), name='party_detail'), # パーティーの詳細(メンバー一覧)
+    path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'), # メンバーの追加
+    path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'), # メンバーの削除
     path('create_quest/', views.create_quest, name='create_quest'),
-    
     path('summary', views.summary, name='summary'),
     path('delete_quest/<int:quest_id>/', views.delete_quest, name='delete_quest'),
-    
-
+    # ユーザー認証関係
+    path('accounts/signup/', views.SignUp.as_view(), name='signup'),
+    path('accounts/signup/complete/', views.signup_complete, name='signup_complete'),
+    path('accounts/login/', views.LoginView.as_view(), name='login'),
 ]

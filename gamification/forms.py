@@ -1,5 +1,6 @@
 from django import forms
-from .models import Quest
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import Quest, User
 
 class QuestForm(forms.ModelForm):
     class Meta:
@@ -13,3 +14,15 @@ class QuestForm(forms.ModelForm):
             'difficulty': '難易度',
             'time': '予想時間',
         }
+
+class SignUpForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = (
+            "name",
+            "gpt_key",
+        )
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='社員番号')
+    password = forms.CharField(label='パスワード', widget=forms.PasswordInput)
