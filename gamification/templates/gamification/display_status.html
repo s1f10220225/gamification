@@ -63,6 +63,7 @@
             {% empty %}
                 <p class="status">登録されているステータスはありません。</p>
             {% endfor %}
+            <p><a href="{% url 'career_to_status' user.user_id %}">ステータスを登録(変更)する</a></p>
         </div>
     </div>
 </body>
