@@ -1,57 +1,54 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>クエストを追加</title>
+    <title>クエストの作成とAPIリクエスト</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
         .form-container {
-            width: 300px;
+            width: 400px;
             margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
         .form-group {
             margin-bottom: 15px;
         }
+        h1 {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>要約作成</h1>
-    
     <div class="form-container">
-        <form method="POST">
+        <h1>クエストを作成する</h1>
+        <form method="post" action="{% url 'create_quest' %}"> 
             {% csrf_token %}
-            <label for="api_key">APIキー:</label><br>
-            <input type="text" id="api_key" name="api_key" value="{{ api_key }}" required><br>
-
-            <label for="user_message">メッセージ:</label><br>
-            <textarea id="user_message" name="user_message" required>{{ user_message }}</textarea><br><br>
-
-            <input type="submit" value="送信">
+            {{ form.as_p }} 
+            <button type="submit">クエストを作成</button>
         </form>
-    </div>
-    {% if response %}
-        <h2>応答:</h2>
-        <p>{{ response }}</p>
-    {% endif %}
-    <h1>クエスト追加</h1>
-
-    <div class="form-container">
-        <form method="post">
+        
+        <h1>文章の要約</h1>
+        <form method="POST" action="{% url 'summary' %}"> 
             {% csrf_token %}
-            {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}  <!-- ここでフォームフィールドの表現を保持 -->
-                    {{ field.errors }}
-                </div>
-            {% endfor %}
-            <button type="submit">追加</button>
+            <div class="form-group">
+                <label for="api_key">APIキー:</label><br>
+                <input type="text" id="api_key" name="api_key" required>
+            </div>
+            <div class="form-group">
+                <label for="user_message">ユーザーメッセージ:</label><br>
+                <textarea id="user_message" name="user_message"></textarea>
+            </div>
+            <button type="submit">開始</button>
         </form>
-    </div>
 
-    
-    <a href="{% url 'quest' %}">クエストリストに戻る</a>
+        {% if response %}
+            <h2>レスポンス:</h2>
+            <p>{{ response }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>

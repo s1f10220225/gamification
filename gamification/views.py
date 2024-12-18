@@ -95,7 +95,7 @@ def password2(request):
     if request.method == 'POST':
         input_password = request.POST.get('password2')
         if input_password == settings.PASSWORD:
-            return redirect('sample_return2')
+            return redirect('summary')
         else:
             return render(request, 'gamification/259pass.html', {'error': 'パスワードが正しくありません。'})
     return render(request, 'gamification/259pass.html')
@@ -234,39 +234,51 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
 
 
-def combined_view(request):
-    form = QuestForm()  # フォームインスタンスを最初に作成
-    user_message = ''  
+def summary(request):
+    user_message = ''
     api_key = ''  # APIキーを保持
     response = ''
 
     if request.method == 'POST':
-        if 'quest_form' in request.POST:
-            form = QuestForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('quest')
+        # APIリクエストの処理
+        api_key = request.POST.get('api_key', '')  # APIキーを保持
+        user_message = request.POST.get('user_message', '')
 
-        elif 'api_key' in request.POST:
-            api_key = request.POST.get('api_key', '')  # APIキーを保持
+        if api_key:  # APIキーが入力された場合のみ処理
             order = "文章の要約をお願い。要点をまとめるようにしてまた、難易度[AからG]とどのくらいの期間が必要かを書いてほしい"
-            user_message = request.POST.get('user_message', '')
 
             try:
                 response = get_gpt_response(api_key, order, user_message, temperature=0.2)
             except Exception as e:
                 response = f"エラーが発生しました: {str(e)}"
 
-            return render(request, "gamification/259add_quest.html", {
-                "response": response,
-                'form': form,
-                'user_message': user_message,
-                'api_key': api_key  # APIキーをコンテキストに追加
-            })
-
     return render(request, "gamification/259add_quest.html", {
-        'form': form,
         'user_message': user_message,
         'response': response,
         'api_key': api_key  # APIキーも保持
     })
+
+
+def create_quest(request):
+    if request.method == 'POST':
+        form = QuestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('quest')  # 成功した場合のリダイレクト先を指定
+    else:
+        form = QuestForm()
+
+    return render(request, 'gamification/create_quest.html', {'form': form})
+
+from django.http import HttpResponseRedirect
+
+from .models import Quest
+def delete_quest(request, quest_id):
+    
+    quest = get_object_or_404(Quest, quest_id=quest_id) 
+
+    if request.method == 'POST':
+        quest.delete()  
+        return HttpResponseRedirect(reverse('quest'))  
+
+    return render(request, "gamification/259quest_list.html", {'quest': quest})
