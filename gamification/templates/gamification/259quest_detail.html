@@ -47,7 +47,7 @@
         </p>
         <a href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</a>
         <br>
-        <!-- 削除ボタンの追加 -->
+        
         <form method="post" action="{% url 'delete_quest' quest_id=quest.quest_id %}" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="delete">削除</button>
