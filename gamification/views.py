@@ -175,46 +175,30 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
 
 
-def combined_view(request):
-    form = QuestForm()  # フォームインスタンスを最初に作成
-    user_message = ''  
+def summary(request):
+    user_message = ''
     api_key = ''  # APIキーを保持
     response = ''
 
     if request.method == 'POST':
-        if 'quest_form' in request.POST:
-            form = QuestForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('quest')
+        # APIリクエストの処理
+        api_key = request.POST.get('api_key', '')  # APIキーを保持
+        user_message = request.POST.get('user_message', '')
 
-        elif 'api_key' in request.POST:
-            api_key = request.POST.get('api_key', '')  # APIキーを保持
+        if api_key:  # APIキーが入力された場合のみ処理
             order = "文章の要約をお願い。要点をまとめるようにしてまた、難易度[AからG]とどのくらいの期間が必要かを書いてほしい"
-            user_message = request.POST.get('user_message', '')
 
             try:
                 response = get_gpt_response(api_key, order, user_message, temperature=0.2)
             except Exception as e:
                 response = f"エラーが発生しました: {str(e)}"
 
-            return render(request, "gamification/259add_quest.html", {
-                "response": response,
-                'form': form,
-                'user_message': user_message,
-                'api_key': api_key  # APIキーをコンテキストに追加
-            })
-
     return render(request, "gamification/259add_quest.html", {
-        'form': form,
         'user_message': user_message,
         'response': response,
         'api_key': api_key  # APIキーも保持
     })
 
-
-from django.shortcuts import render, redirect
-from .forms import QuestForm
 
 def create_quest(request):
     if request.method == 'POST':
@@ -224,5 +208,5 @@ def create_quest(request):
             return redirect('quest')  # 成功した場合のリダイレクト先を指定
     else:
         form = QuestForm()
-    
+
     return render(request, 'gamification/create_quest.html', {'form': form})

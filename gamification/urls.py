@@ -5,9 +5,6 @@ urlpatterns = [
     path('', views.top, name='top'),
     path('259/', views.quest, name='quest'),  # パスの最後にスラッシュ追加
     path('quest/<int:quest_id>/', views.quest_detail, name='quest_detail'),  # 修正
-
-    
-
     path('user/<int:user_id>/status/', views.display_status, name='display_status'),  # ステータス表示用のURL
     path('pass/', views.password2, name='password'),  # パスワード入力ページのURL
     path('quest/accept/<int:quest_id>/', views.accept_quest, name='accept_quest'),  # 受けるURLを追加
@@ -19,5 +16,6 @@ urlpatterns = [
 
 
     path('create_quest/', views.create_quest, name='create_quest'),
-    path('sample/2/', views.combined_view, name='sample_return2'), 
+    path('sample/2/', views.summary, name='sample_return2'), 
+
 ]
