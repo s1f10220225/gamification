@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseRedirect
-from .models import Quest, User, Status, Party, PartyBelonged  # Quest, User, Status, Party, PartyBelongedモデルをインポート
-from .forms import QuestForm, SignUpForm, LoginForm   # Formをインポート
+from .models import Quest, User, Status, Party, PartyBelonged, Category  # Quest, User, Status, Party, PartyBelonged, Categoryモデルをインポート
+from .forms import QuestForm, SignUpForm, LoginForm, CareerForm   # Formをインポート
 from django.conf import settings  # settings.pyからパスワードを取り込むために必要
 from django.views import View
 from django.urls import reverse, reverse_lazy
