@@ -285,21 +285,24 @@ def delete_quest(request, quest_id):
 class SignUp(CreateView):
     form_class = SignUpForm
     template_name = "gamification/signup.html" 
-    success_url = reverse_lazy('top')
+    success_url = reverse_lazy('signup_complete')
 
     def form_valid(self, form):
-        user = form.save() # formの情報を保存
+        name = form.cleaned_data['name']
+        gpt_key = form.cleaned_data['gpt_key']
+        password = form.cleaned_data['password1']  # ここでpassword1を取得
+
+        # CustomUserManager経由でユーザーを作成
+        user = User.objects.create_user(name=name, gpt_key=gpt_key, password=password)
+
+        # ユーザーをログインさせる
         login(self.request, user) # 認証
         self.object = user
         return HttpResponseRedirect(self.get_success_url()) # リダイレクト
 
 # サインアップ後の画面
 def signup_complete(request):
-    employee_number = request.GET.get('employee_number', None)
-    context = {
-        'employee_number': employee_number,
-    }
-    return render(request, 'gamification/signup_complete.html', context)
+    return render(request, 'gamification/signup_complete.html')
 
 # ログイン時のフォーム表示(デフォルトだと社員番号がカラム名になるため)
 class LoginView(LoginView):
