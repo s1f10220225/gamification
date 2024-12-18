@@ -221,7 +221,7 @@ def create_quest(request):
         form = QuestForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')  # 成功した場合のリダイレクト先を指定
+            return redirect('quest')  # 成功した場合のリダイレクト先を指定
     else:
         form = QuestForm()
     
