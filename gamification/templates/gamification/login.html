@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ログイン</title>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>ログイン</h2>
+
+        {% if form.errors %}
+        <div class="error-messages">
+            <p>入力内容に誤りがあります。もう一度確認してください。</p>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <!-- 非フィールドエラーの表示 -->
+            {{ form.non_field_errors }}
+
+            <!-- フォームフィールドのループ -->
+            <div class="form-fields">
+                {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="field-errors">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 送信ボタン -->
+            <div class="form-actions">
+                <button type="submit">ログイン</button>
+            </div>
+        </form>
+
+        <!-- サインアップページへのリンク -->
+        <p>アカウントをお持ちでないですか？ <a href="{% url 'signup' %}">サインアップはこちら</a></p>
+    </div>
+</body>
+
+</html>

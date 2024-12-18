@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>サインアップ完了</title>
+</head>
+<body>
+    <h2>サインアップが完了しました。</h2>
+    <p>今後ログイン時に必要となるため、以下の情報を控えておいてください。</p>
+    <p>社員番号: {{ employee_number }}</p>
+    <p>パスワード: あなたの設定したパスワード</p>
+    <a href="{% url 'login' %}">ログインページへ</a>
+</body>
+</html>

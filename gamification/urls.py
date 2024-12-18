@@ -17,4 +17,8 @@ urlpatterns = [
     path('create_quest/', views.create_quest, name='create_quest'),
     path('summary', views.summary, name='summary'),
     path('delete_quest/<int:quest_id>/', views.delete_quest, name='delete_quest'),
+    # ユーザー認証関係
+    path('accounts/signup/', views.SignUp.as_view(), name='signup'),
+    path('accounts/signup/complete/', views.signup_complete, name='signup_complete'),
+    path('accounts/login/', views.LoginView.as_view(), name='login'),
 ]
