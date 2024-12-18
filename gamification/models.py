@@ -16,7 +16,7 @@ class CustomUserManager(BaseUserManager):
         print(f"正しい社員番号: INIAD{user.user_id:06}")
         return user
 
-    def create_superuser(self, name, gpt_key, password=None):
+    def create_superuser(self, employee_number, name, gpt_key, password=None):
         user = self.create_user(
             name=name,
             gpt_key=gpt_key,
