@@ -49,10 +49,10 @@
 <body>
     <div class="container">
         <div class="left-space">
-            <h2>アプリ名</h2>
-            <p>クエスト</p>
-            <p>ギルド</p>
-            <p>パーティ</p>
+            <h2><a href="{% url 'top' %}">アプリ名</a></h2>
+            <p><a href="{% url 'quest' %}">クエスト</a></p>
+            <p><a>ギルド</a></p>
+            <p><a href="{% url 'create_party' %}">パーティ</a></p>
         </div>
         <div class="status-container">
             <h2 class="user">
