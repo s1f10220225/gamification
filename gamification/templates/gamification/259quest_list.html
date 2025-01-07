@@ -1,65 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>クエストリスト</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-        }
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-        .left-space {
-            flex: 1;
-            background-color: #FFFFFF;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-        }
-        .left-space h2 {
-            margin: 0;
-            font-size: 1.5em;
-            color: #141313;
-        }
-        .left-space p {
-            margin: 10px 0;
-            color: #000000;
-        }
-        .quests-container {
-            flex: 2;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 20px;
-            border-left: 3px solid #4F0909;
-            margin-left: -400px; /* 左端に移動させるため余白をマイナスに設定 */
-        }
-        .quest-container {
-            border: 1px solid #000000;
-            padding: 15px;
-            border-radius: 5px;
-            width: calc(30% - 20px);
-            box-sizing: border-box;
-        }
-        .quest-title {
-            font-size: 1.5em;
-            margin: 0;
-        }
-        .quest-meta {
-            font-size: 0.9em;
-            color: #6D6D6D;
-        }
-        .status {
-            font-weight: bold;
-        }
-    </style>
+    <meta charset="UTF-8">
+        <link href="{% static 'css/224quest.css' %}" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
+        <nav class="nav">
+            <ul>
+                <li><a href="{% url 'toppage'%}">Home</a></li>
+                <li class="current"><a href="#">Quest</a></li>
+                <li><a href="">Stats</a></li>
+                <li><a href="">Party</a></li>
+                <li><a href="">Option</a></li>
+            </ul>
+        </nav>
+        <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
         <div class="left-space">
             <h2>アプリ名</h2>
             <p>クエスト</p>
@@ -85,5 +44,6 @@
             {% endfor %}
         </div>
     </div>
+    <script src="{% static 'js/224quest.js' %}"></script>
 </body>
 </html>
