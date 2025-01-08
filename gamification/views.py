@@ -234,20 +234,22 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
 
 
+from django.contrib.auth.decorators import login_required  # ログイン必須のデコレーターをインポート
+
+@login_required  # このデコレーターを使ってログインを必須にする
 def summary(request):
     user_message = ''
-    api_key = ''  # APIキーを保持
     response = ''
+    api_key = request.user.gpt_key  # ログインしているユーザーのgpt_keyを取得
 
     if request.method == 'POST':
-        # APIリクエストの処理
-        api_key = request.POST.get('api_key', '')  # APIキーを保持
         user_message = request.POST.get('user_message', '')
 
-        if api_key:  # APIキーが入力された場合のみ処理
+        if api_key:  # APIキーがログインユーザーから取得される場合のみ処理
             order = "文章の要約をお願い。要点をまとめるようにしてまた、難易度[AからG]とどのくらいの期間が必要かを書いてほしい"
 
             try:
+                # get_gpt_response関数を呼び出し、api_keyを使用
                 response = get_gpt_response(api_key, order, user_message, temperature=0.2)
             except Exception as e:
                 response = f"エラーが発生しました: {str(e)}"
@@ -255,9 +257,8 @@ def summary(request):
     return render(request, "gamification/259add_quest.html", {
         'user_message': user_message,
         'response': response,
-        'api_key': api_key  # APIキーも保持
+        'api_key': api_key  # APIキーはユーザーからを利用
     })
-
 
 def create_quest(request):
     if request.method == 'POST':
