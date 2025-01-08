@@ -25,17 +25,18 @@
 <body>
     <div class="form-container">
         <h1>クエストを作成する</h1>
-        <form method="post" action="{% url 'create_quest' %}"> 
+        <form method="post" action="{% url 'create_quest' %}">
             {% csrf_token %}
-            {{ form.as_p }} 
+            <!-- クエスト作成フォームの内容をここに追加 -->
             <button type="submit">クエストを作成</button>
         </form>
-        
+
         <h1>文章の要約</h1>
-        <form method="POST" action="{% url 'summary' %}"> 
+        <form method="POST" action="{% url 'summary' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="api_key">APIキー:</label><br>
+                <p>Your GPT Key: {{ gpt_key }}</p>
                 <input type="text" id="api_key" name="api_key" required>
             </div>
             <div class="form-group">

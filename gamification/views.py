@@ -308,3 +308,14 @@ def signup_complete(request):
 class LoginView(LoginView):
     authentication_form = LoginForm
     template_name = 'gamification/login.html'
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required  # 認証済みユーザーのデコレータ
+from .models import User
+
+@login_required  # このデコレータを加えることでログイン必須にする
+def user_profile(request):
+    user = request.user  # 現在のログインユーザーを取得
+    return render(request, 'gamification/user_profile.html', {'user': user})
