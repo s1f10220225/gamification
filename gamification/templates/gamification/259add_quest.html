@@ -1,22 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>クエストを追加</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .form-container {
-            width: 300px;
-            margin: 0 auto;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-    </style>
+    <link href="{% static 'css/224addque.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
     <h1>クエストを追加</h1>
     <div class="form-container">
         <form method="post">

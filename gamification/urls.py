@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.top, name='top'),
     path('259', views.quest, name='quest'),
     path('quest/<int:quest_id>/', views.quest_detail, name='quest_detail'),  # 修正
     path('quest/add/', views.add_quest, name='add_quest'),  # クエスト追加用のURLパターン
@@ -14,7 +13,7 @@ urlpatterns = [
     path('party/<int:party_id>/', views.PartyDetailView.as_view(), name='party_detail'), # パーティーの詳細(メンバー一覧)
     path('party/<int:party_id>/add_member/', views.AddMemberView.as_view(), name='add_member'), # メンバーの追加
     path('party/<int:party_id>/remove_member/<int:user_id>/', views.RemoveMemberView.as_view(), name='remove_member'), # メンバーの削除
-    path('224toppage',views.toppage,name='toppage'),
+    path('',views.toppage,name='toppage'),
 
     
 ]

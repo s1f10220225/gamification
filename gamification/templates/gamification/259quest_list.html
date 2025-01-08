@@ -13,8 +13,7 @@
             <ul>
                 <li><a href="{% url 'toppage'%}">Home</a></li>
                 <li class="current"><a href="#">Quest</a></li>
-                <li><a href="">Stats</a></li>
-                <li><a href="">Party</a></li>
+                <li><a href="{% url 'create_party'%}">Party</a></li>
                 <li><a href="">Option</a></li>
             </ul>
         </nav>
@@ -41,6 +40,7 @@
                 </div>
             {% empty %}
                 <p>現在利用可能なクエストはありません。</p>
+                <a href="{% url 'add_quest'%}">クエスト追加</a>
             {% endfor %}
         </div>
     </div>

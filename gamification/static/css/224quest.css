@@ -1,116 +1,150 @@
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
+    padding: 0;
+    overflow: hidden; /* スクロールを防止 */
 }
-.container {
-    display: flex;
-    height: 100vh;
-    position: relative;
+
+.main{
+  opacity: 0; 
+  transition: opacity 1s ease-in; 
+  position: relative;
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.main.show {
+  opacity: 1;
 }
 .left-space {
-    flex: 1;
-    background-color: #FFFFFF;
+
+    flex: 0 0 300px; /* 固定幅を指定 */
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明の背景色を設定 */
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
+    position: absolute; /* 絶対配置で左上に配置 */
+    top: 0;
+    left: 0;
+    height: 100%; /* 画面の高さに合わせる */
+    z-index: 10; /* 背景画像の上に表示 */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
 }
+
+.left-space h2, .left-space p {
+  margin: 10px 0;
+  color: #141313;
+}
+
 .left-space h2 {
-    margin: 0;
-    font-size: 1.5em;
-    color: #141313;
+  font-size: 1.5em;
+  margin: 0;
 }
-.left-space p {
-    margin: 10px 0;
-    color: #000000;
+
+.container {
+  display: flex;
+  position: relative;
+  height: 100vh;
+  width: 100vw; /* 全画面に広げる */
+  overflow: hidden; /* コンテナの外に要素がはみ出さないようにする */
 }
+
 .quests-container {
-    flex: 2;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    border-left: 3px solid #4F0909;
-    margin-left: -400px; /* 左端に移動させるため余白をマイナスに設定 */
+  flex: 1; /* 残りのスペースを占有 */
+  display: flex;
+  flex-direction: column; /* 縦方向に配置 */
+  align-items: center; /* 水平方向の中央揃え */
+  justify-content: center; /* 垂直方向の中央揃え */
+  gap: 20px; /* 要素間の間隔 */
+  padding: 20px;
+  position: absolute; /* 絶対配置 */
+  top: 50%; /* 垂直方向の中央 */
+  left: 50%; /* 水平方向の中央 */
+  transform: translate(-50%, -50%); /* 完全に中央に配置 */
+  z-index: 5; /* 背景画像の上に表示 */
 }
-.quest-container {
-    border: 1px solid #000000;
-    padding: 15px;
-    border-radius: 5px;
-    width: calc(30% - 20px);
-    box-sizing: border-box;
+
+.container.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: grayscale(30%);
 }
+
 .quest-title {
-    font-size: 1.5em;
-    margin: 0;
+  font-size: 1.5em;
+  margin: 0;
 }
 .quest-meta {
-    font-size: 0.9em;
-    color: #6D6D6D;
+  font-size: 0.9em;
+  color: #6D6D6D;
 }
 .status {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-.container.background{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    filter: grayscale(30%);
-    }
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* 最背面に配置 */
+  filter: grayscale(30%);
+}
 
-    
 .nav {
-    position: absolute; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.9); 
-    border-bottom: 1px solid #ccc;
-    z-index: 10; 
-  }
-  
-  .nav ul {
-    display: flex; 
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    justify-content: center;
-  }
-  
-  .nav ul li {
-    flex: 1;
-    min-width: 80px;
-    text-align: center;
-    border-right: 1px solid #ccc;
-  }
-  
-  .nav ul li:first-child {
-    border-left: 1px solid #ccc;
-  }
-  
-  .nav ul li a {
-    display: block;
-    padding: 15px 0;
-    text-decoration: none;
-    color: #555;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-  
-  .nav ul li a:hover {
-    background-color: #979797b9;
-    color: #ffffff;
-    border-bottom: 5px solid#979797b9;
-  }
-  
-  .nav ul li.current a {
-    border-bottom: 5px solid #818181;
-    color: #000000;
-  }
-  
+  position: fixed; /* 固定配置 */
+  bottom: 20px; /* ページの下部から20px */
+  right: 20px; /* ページの右側から20px */
+  background-color: transparent; /* 背景を透明に */
+  z-index: 10;
+}
+
+.nav ul {
+  display: flex;
+  flex-direction: column; /* 縦方向に並べる */
+  gap: 15px; /* ボタン間の間隔を指定 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav ul li {
+  min-width: auto; /* 幅の制約を削除 */
+  text-align: center;
+}
+
+.nav ul li a {
+  display: block;
+  padding: 10px 20px; /* ボタン内の余白を調整 */
+  text-decoration: none;
+  color: #555;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px; /* ボタンを丸くする */
+  background-color: rgba(255, 255, 255, 0.8); /* 背景色を追加 */
+  transition: all 0.3s ease;
+}
+
+.nav ul li a:hover {
+  background-color: #979797b9;
+  color: #ffffff;
+  border-bottom: none; /* 下線を削除 */
+}
+
+.nav ul li.current a {
+  background-color: #818181; /* 現在のページを示す背景色 */
+  color: #ffffff;
+}
