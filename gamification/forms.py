@@ -29,4 +29,4 @@ class LoginForm(AuthenticationForm):
 
 
 class CareerForm(forms.Form):
-    career = forms.CharField()
+    career = forms.CharField(widget=forms.Textarea,label="ここに入力")
