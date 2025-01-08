@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>メンバーセレクト</title>
+</head>
+<body>
+    <h1>メンバーセレクト</h1>
+    {% if random_users %}
+        <ul>
+            {% for user in random_users %}
+                <li>ユーザー名: {{ user.name }} (ID: {{ user.user_id }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>ユーザーが存在しません。</p>
+    {% endif %}
+</body>
+</html>
