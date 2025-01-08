@@ -16,6 +16,9 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
 
+from django.shortcuts import render
+from .models import User
+from django.contrib.auth.decorators import login_required  # ログイン必須のデコレーターをインポート　# 認証済みユーザーのデコレータ
 
 def top(request):
     return render(request, "gamification/top.html")
@@ -234,8 +237,6 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
 
 
 
-from django.contrib.auth.decorators import login_required  # ログイン必須のデコレーターをインポート
-
 @login_required  # このデコレーターを使ってログインを必須にする
 def summary(request):
     user_message = ''
@@ -310,11 +311,6 @@ class LoginView(LoginView):
     authentication_form = LoginForm
     template_name = 'gamification/login.html'
 
-
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required  # 認証済みユーザーのデコレータ
-from .models import User
 
 @login_required  # このデコレータを加えることでログイン必須にする
 def user_profile(request):
