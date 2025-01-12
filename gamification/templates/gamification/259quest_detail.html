@@ -18,19 +18,16 @@
         }
         .quest-meta {
             font-size: 1em;
-            color: #777;
+            color: #000000;
         }
         .receive {
-            color: red;
+            
             cursor: pointer;
-            text-decoration: underline;
+            text-decoration: none;
         }
         .delete {
-            color: white;
             background-color: red;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 3px;
+            color: white;
             cursor: pointer;
             text-decoration: none;
         }
@@ -45,8 +42,8 @@
             予想時間: <span>{{ quest.time }}</span> |
             状態: <span>{{ quest.status }}</span>
         </p>
-        <a href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</a>
-        <br>
+        <button href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</button>
+        
         
         <form method="post" action="{% url 'delete_quest' quest_id=quest.quest_id %}" style="display:inline;">
             {% csrf_token %}

@@ -25,12 +25,14 @@ def top(request):
 
 def quest(request):
     quests = Quest.objects.all()
-    return render(request, "gamification/259quest_list.html", {'quests': quests})
+    #return render(request, "gamification/259quest_list.html", {'quests': quests})
+    return render(request, "259quest_list.html", {'quests': quests})
+
 
 def quest_detail(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     return render(request, "gamification/259quest_detail.html", {'quest': quest})
-
+    
 def display_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
