@@ -1,0 +1,26 @@
+/* 224login.css */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black; /* 背景を黒に設定 */
+  overflow: hidden; /* スクロールを無効化 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* ビューポートの高さを全体に設定 */
+}
+
+.div {
+  width: 25%; /* 画像の幅を小さめに設定 */
+  z-index: 2;
+}
+
+.div img{
+  width: 100%;
+  height: auto;
+  transition: transform 0.4s ease;
+}
+
+.div img:active {
+  transform: translateY(15px); /* 下に10px移動 */
+}
