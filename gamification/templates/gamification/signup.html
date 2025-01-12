@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>サインアップ</title>
+    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
+
 </head>
 
 <body>
@@ -45,8 +47,10 @@
         </form>
 
         <!-- ログインページへのリンク -->
-        <p>すでにアカウントをお持ちですか？ <a href="% url 'login' %}">こちらからログイン</a></p>
+        <p>すでにアカウントをお持ちですか？ <a href="{% url 'login' %}">こちらからログイン</a></p>
     </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 
 </body>
 

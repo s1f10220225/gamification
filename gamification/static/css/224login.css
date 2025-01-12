@@ -1,26 +1,154 @@
-/* 224login.css */
 body {
   margin: 0;
   padding: 0;
-  background-color: black; /* 背景を黒に設定 */
-  overflow: hidden; /* スクロールを無効化 */
+  font-family: Arial, sans-serif;
+  height: 100vh; /* ビューポートの高さを全体に設定 */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* ビューポートの高さを全体に設定 */
+  background-color: black; /* 背景のフォールバックカラー */
+  position: relative;
+  overflow: hidden;
 }
+
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 画像をコンテナ全体に収める */
+  z-index: 1; 
+  filter: grayscale(30%);
+}
+
+.login-container {
+  position: relative;
+  z-index: 2; /* コンテンツを背景画像の上に配置 */
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* ボックスの影を追加 */
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.login-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-container .error-messages {
+  color: #ff4d4d;
+  background-color: rgba(255, 0, 0, 0.1); /* 薄い赤色の背景 */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.form-fields {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.field-errors {
+  color: #ff4d4d;
+  font-size: 12px;
+}
+
+.form-actions button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-actions button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+
+.signup-container {
+  position: relative;
+  z-index: 2; /* コンテンツを背景画像の上に配置 */
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* ボックスの影を追加 */
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.signup-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.signup-container .error-messages {
+  color: #ff4d4d;
+  background-color: rgba(255, 0, 0, 0.1); /* 薄い赤色の背景 */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+
 
 .div {
   width: 25%; /* 画像の幅を小さめに設定 */
   z-index: 2;
 }
 
-.div img{
+.div img {
   width: 100%;
   height: auto;
-  transition: transform 0.4s ease;
+  transition: transform 0.2s ease; /* モーションのトランジションを設定 */
 }
 
+/* 画像がクリックされた時に少し下に移動 */
 .div img:active {
-  transform: translateY(15px); /* 下に10px移動 */
+  transform: translateY(10px); /* 下に10px移動 */
 }

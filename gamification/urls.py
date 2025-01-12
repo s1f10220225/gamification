@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/login/', views.LoginView.as_view(), name='login'),
 
     path('224toppage',views.toppage,name='toppage'),
+    path('top',views.top,name='top'),
     path('224login',views.main_login,name='main_login'),
 
     

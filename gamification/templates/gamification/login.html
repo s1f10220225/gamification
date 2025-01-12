@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <title>ログイン</title>
+    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -45,6 +47,8 @@
         <!-- サインアップページへのリンク -->
         <p>アカウントをお持ちでないですか？ <a href="{% url 'signup' %}">サインアップはこちら</a></p>
     </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 
 </html>
