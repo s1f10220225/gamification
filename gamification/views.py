@@ -10,10 +10,14 @@ from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 import re # 正規表現による検索を行うため必要
 
+# ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
 from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import requests #function callingを使うなら必要
+
+from django.shortcuts import render
+from .models import User
 from django.contrib.auth.decorators import login_required  # ログイン必須のデコレーターをインポート　# 認証済みユーザーのデコレータ
 
 def top(request):
@@ -231,12 +235,6 @@ def get_gpt_response(api_key, order, user_message, temperature=0.2):
     return result.content  # AIの応答内容を返す
 
 
-def toppage(request):
-    return render(request, "gamification/224toppage.html") 
-
-
-def main_login(request):
-    return render(request, "gamification/224login.html") 
 
 
 @login_required  # このデコレーターを使ってログインを必須にする
