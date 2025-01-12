@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>クエストを追加</title>
@@ -11,19 +11,49 @@
 <body>
     <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
     <h1>クエストを追加</h1>
+    <title>クエストの作成とAPIリクエスト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
     <div class="form-container">
-        <form method="post">
+        <h1>クエストを作成する</h1>
+        <form method="post" action="{% url 'create_quest' %}">
             {% csrf_token %}
-            {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {{ field.errors }}
-                </div>
-            {% endfor %}
-            <button type="submit">追加</button>
+            <!-- クエスト作成フォームの内容をここに追加 -->
+            <button type="submit">クエストを作成</button>
         </form>
+
+        <h1>文章の要約</h1>
+        <form method="POST" action="{% url 'summary' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="user_message">ユーザーメッセージ:</label><br>
+                <textarea id="user_message" name="user_message" required></textarea>
+            </div>
+            <button type="submit">開始</button>
+        </form>
+
+        {% if response %}
+            <h2>レスポンス:</h2>
+            <p>{{ response }}</p>
+        {% endif %}
     </div>
-    <a href="{% url 'quest' %}">クエストリストに戻る</a>
 </body>
 </html>
