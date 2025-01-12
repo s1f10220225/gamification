@@ -4,8 +4,7 @@
 <head>
     <title>クエストリスト</title>
     <meta charset="UTF-8">
-        <link href="{% static 'css/224quest.css' %}" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="{% static 'css/224login.css' %}" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -17,7 +16,7 @@
                 <li><a href="">Option</a></li>
             </ul>
         </nav>
-        <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
         <div class="left-space">
             <h2>アプリ名</h2>
             <p>クエスト</p>
@@ -40,9 +39,10 @@
                 </div>
             {% empty %}
                 <p>現在利用可能なクエストはありません。</p>
-                <a href="{% url 'add_quest'%}">クエスト追加</a>
             {% endfor %}
         </div>
     </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 </html>
