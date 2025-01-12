@@ -1,11 +1,11 @@
 $(function () {
     $(window).on('load', function () {
-        $(".loader").delay(1500).fadeOut(1000, function () {
+        $(".loader").delay(1000).fadeOut(500, function () {
             $(this).css("display", "none");
         });
     
         setTimeout(function () {
             $(".main").addClass("show");
-        }, 2500);
+        }, 2000);
     });
 });

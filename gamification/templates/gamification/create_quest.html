@@ -1,17 +1,22 @@
-<!-- create_quest.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>クエストの作成</title>
+    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
+
 </head>
 <body>
+    <div class="signup-container">
     <h1>クエストを作成する</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}  <!-- フォームを段落として表示 -->
         <button type="submit">送信</button>
     </form>
+    </div>
+ <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 </html>
