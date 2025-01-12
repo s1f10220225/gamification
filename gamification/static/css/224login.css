@@ -152,3 +152,30 @@ p a:hover {
 .div img:active {
   transform: translateY(10px); /* 下に10px移動 */
 }
+
+
+.form-container {
+  position: relative;
+  z-index: 2; /* コンテンツを背景画像の上に配置 */
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* ボックスの影を追加 */
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.form-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-container .error-messages {
+  color: #ff4d4d;
+  background-color: rgba(255, 0, 0, 0.1); /* 薄い赤色の背景 */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}

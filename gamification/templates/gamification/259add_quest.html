@@ -3,33 +3,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>クエストを追加</title>
-    <link href="{% static 'css/224addque.css' %}" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-</head>
-<body>
-    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
-    <h1>クエストを追加</h1>
     <title>クエストの作成とAPIリクエスト</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .form-container {
-            width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        h1 {
-            text-align: center;
-        }
-    </style>
+    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
 </head>
 <body>
     <div class="form-container">
@@ -55,5 +30,8 @@
             <p>{{ response }}</p>
         {% endif %}
     </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
+
 </body>
 </html>

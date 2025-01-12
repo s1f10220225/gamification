@@ -316,3 +316,10 @@ class LoginView(LoginView):
 def user_profile(request):
     user = request.user  # 現在のログインユーザーを取得
     return render(request, 'gamification/user_profile.html', {'user': user})
+
+def toppage(request):
+    return render(request, "gamification/224toppage.html") 
+
+
+def main_login(request):
+    return render(request, "gamification/224login.html")
