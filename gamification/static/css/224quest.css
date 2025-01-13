@@ -1,96 +1,13 @@
-
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* スクロールを防止 */
-}
-
-.main{
-  opacity: 0; 
-  transition: opacity 1s ease-in; 
-  position: relative;
-  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
   height: 100vh;
-
   display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
-}
-.main.show {
-  opacity: 1;
-}
-.left-space {
-
-    flex: 0 0 300px; /* 固定幅を指定 */
-    background-color: rgba(255, 255, 255, 0.8); /* 半透明の背景色を設定 */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    position: absolute; /* 絶対配置で左上に配置 */
-    top: 0;
-    left: 0;
-    height: 100%; /* 画面の高さに合わせる */
-    z-index: 10; /* 背景画像の上に表示 */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
-}
-
-.left-space h2, .left-space p {
-  margin: 10px 0;
-  color: #141313;
-}
-
-.left-space h2 {
-  font-size: 1.5em;
-  margin: 0;
-}
-
-.container {
-  display: flex;
+  align-items: center;
   position: relative;
-  height: 100vh;
-  width: 100vw; /* 全画面に広げる */
-  overflow: hidden; /* コンテナの外に要素がはみ出さないようにする */
-}
-
-.quests-container {
-  flex: 1; /* 残りのスペースを占有 */
-  display: flex;
-  flex-direction: column; /* 縦方向に配置 */
-  align-items: center; /* 水平方向の中央揃え */
-  justify-content: center; /* 垂直方向の中央揃え */
-  gap: 20px; /* 要素間の間隔 */
-  padding: 20px;
-  position: absolute; /* 絶対配置 */
-  top: 50%; /* 垂直方向の中央 */
-  left: 50%; /* 水平方向の中央 */
-  transform: translate(-50%, -50%); /* 完全に中央に配置 */
-  z-index: 5; /* 背景画像の上に表示 */
-}
-
-.container.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-  filter: grayscale(30%);
-}
-
-.quest-title {
-  font-size: 1.5em;
-  margin: 0;
-}
-.quest-meta {
-  font-size: 0.9em;
-  color: #6D6D6D;
-}
-.status {
-  font-weight: bold;
+  overflow: hidden;
 }
 
 .background {
@@ -100,51 +17,95 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0; /* 最背面に配置 */
+  z-index: 1;
   filter: grayscale(30%);
 }
 
-.nav {
-  position: fixed; /* 固定配置 */
-  bottom: 20px; /* ページの下部から20px */
-  right: 20px; /* ページの右側から20px */
-  background-color: transparent; /* 背景を透明に */
-  z-index: 10;
-}
-
-.nav ul {
-  display: flex;
-  flex-direction: column; /* 縦方向に並べる */
-  gap: 15px; /* ボタン間の間隔を指定 */
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.nav ul li {
-  min-width: auto; /* 幅の制約を削除 */
+.quests-container {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
   text-align: center;
+  width: 90%;
+  max-width: 600px;
+  overflow-y: auto;
+  max-height: 80vh; /* コンテナの最大高さを設定し、スクロール可能に */
 }
 
-.nav ul li a {
-  display: block;
-  padding: 10px 20px; /* ボタン内の余白を調整 */
-  text-decoration: none;
-  color: #555;
-  font-size: 16px;
+.quest-container {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px; /* 各要素の間隔を空ける */
+  padding: 20px;
+  text-align: left; /* テキストを左揃えに */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quest-container:hover {
+  transform: scale(1.02); /* ホバー時に少し拡大 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.quest-title a {
+  font-size: 20px;
   font-weight: bold;
-  border-radius: 5px; /* ボタンを丸くする */
-  background-color: rgba(255, 255, 255, 0.8); /* 背景色を追加 */
-  transition: all 0.3s ease;
+  color: #333;
+  text-decoration: none;
 }
 
-.nav ul li a:hover {
-  background-color: #979797b9;
-  color: #ffffff;
-  border-bottom: none; /* 下線を削除 */
+.quest-title a:hover {
+  text-decoration: underline;
 }
 
-.nav ul li.current a {
-  background-color: #818181; /* 現在のページを示す背景色 */
-  color: #ffffff;
+.quest-detail {
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.quest-meta {
+  font-size: 12px;
+  color: #777;
+}
+
+.quest-meta .difficulty {
+  font-weight: bold;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.buttonNeumorphism {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  aspect-ratio: 1;
+  color: #222;
+  background-color: #efefef;
+  border-radius: 50%;
+  box-shadow: -4px -4px 8px #a7a7a754;
+
+  /* ボタンを右下に固定配置 */
+  position: fixed;
+  bottom: 30px;
+  right: 60px;
+  z-index: 3;
+}
+
+@media (any-hover: hover) {
+  .buttonNeumorphism {
+    transition: box-shadow 0.1s;
+  }
+
+  .buttonNeumorphism:hover {
+    box-shadow: -2px -2px 4px #000000, 3px 3px 5px rgb(255, 255, 255);
+  }
 }

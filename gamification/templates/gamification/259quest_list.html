@@ -4,26 +4,10 @@
 <head>
     <title>クエストリスト</title>
     <meta charset="UTF-8">
-        <link href="{% static 'css/224login.css' %}" rel="stylesheet">
+    <link href="{% static 'css/224quest.css' %}" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <nav class="nav">
-            <ul>
-                <li><a href="{% url 'toppage'%}">Home</a></li>
-                <li class="current"><a href="#">Quest</a></li>
-                <li><a href="{% url 'create_party'%}">Party</a></li>
-                <li><a href="">Option</a></li>
-            </ul>
-        </nav>
-
-        <div class="left-space">
-            <h2>アプリ名</h2>
-            <p>クエスト</p>
-            <p>ギルド</p>
-            <p>パーティ</p>
-            <p><a href="{% url 'password' %}">password</a></p> <!-- a タグを使用 -->
-        </div>
         <div class="quests-container">
             {% for quest in quests %}
                 <div class="quest-container">
@@ -42,7 +26,15 @@
             {% endfor %}
         </div>
     </div>
-    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 
+    <a href="{% url 'create_quest' %}" class="buttonNeumorphism">
+        <svg class="iconPlus" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+            <line x1="5" y1="12" x2="19" y2="12" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </a>
+    
+
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 </body>
 </html>
