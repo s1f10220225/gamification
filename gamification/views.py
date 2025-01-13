@@ -26,7 +26,7 @@ def top(request):
 def quest(request):
     quests = Quest.objects.all()
     #return render(request, "gamification/259quest_list.html", {'quests': quests})
-    return render(request, "259quest_list.html", {'quests': quests})
+    return render(request, "gamification/259quest_list.html", {'quests': quests})
 
 
 def quest_detail(request, quest_id):

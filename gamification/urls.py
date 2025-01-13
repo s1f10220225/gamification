@@ -5,7 +5,7 @@ from .views import user_profile
 from .views import party_list_view
 
 urlpatterns = [
-    path('', views.top, name='top'),
+    path('top', views.top, name='top'),
     path('259/', views.quest, name='quest'),
     
     path('quest/<int:quest_id>/', views.quest_detail, name='quest_detail'),
@@ -33,7 +33,7 @@ urlpatterns = [
     path('accounts/login/', views.LoginView.as_view(), name='login'),
 
     path('224toppage',views.toppage,name='toppage'),
-    path('224login',views.main_login,name='main_login'),
+    path('',views.main_login,name='main_login'),
 
     
 ]

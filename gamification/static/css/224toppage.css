@@ -42,7 +42,7 @@ body {
 }
 
 .signup-container {
-  position: fixed;
+  position: fixed; /* 画面全体に対する固定位置 */
   z-index: 3; /* 背景オーバーレイよりも上に配置 */
   background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
   border-radius: 10px;
@@ -51,6 +51,11 @@ body {
   text-align: center;
   width: 90%;
   max-width: 400px;
+
+  /* 中央配置のための設定 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .signup-container h2 {
