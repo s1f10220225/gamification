@@ -1,37 +1,89 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
+
+.loader {
+  position: fixed;
+  width: 100%;
   height: 100vh;
+  background-color: #fff;
+  z-index: 999;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  overflow: hidden; 
+}
+
+
+.loading_logo {
+  width: 150px;
+  height: auto; 
+  text-align: center;
+}
+
+.loading_logo img {
+  width: 100%; 
+  height: auto;
+  object-fit: contain; 
+}
+
+.fadeUp {
+  animation-name: fadeUpAnime;
+  animation-duration: 1.6s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUpAnime {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(2);
+  }
+}
+
+.fadeOut {
+  animation: fadeOutAnime 1.5s ease-out forwards;
+}
+
+@keyframes fadeOutAnime {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.main{
+  opacity: 0; 
+  transition: opacity 1s ease-in; 
   position: relative;
-  overflow: hidden;
-}
-
-.main img {
-
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(30%);
-}
-
-.main {
-  position: absolute;
-  opacity: 1;
   width: 100%;
   height: 100vh;
+
+  display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
+.main.show {
+  opacity: 1;
+}
 
-.main:before {
+.background{
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+z-index: 0;
+filter: grayscale(30%);
+}
+.main:before{
   content: '';
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
@@ -39,11 +91,68 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
+
+}  
+.nav ul {
+  display: flex;
+  flex-direction: row; /* 横方向に並べる */
+  gap: 15px; /* ボタン間の間隔 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: center; /* メニュー全体を中央揃え */
 }
 
+.nav {
+  position: fixed; /* 固定配置 */
+  bottom: 20px; /* ページの下部から20px */
+  left: 0; /* ページ全幅を占めるように調整 */
+  width: 100%; /* 横幅を全画面に設定 */
+  background-color: transparent; /* 背景を透明に */
+  z-index: 5;
+}
+
+.nav ul li a {
+  display: inline-block; /* 横に並べるためのスタイル */
+  padding: 10px 20px; /* ボタン内の余白を調整 */
+  text-decoration: none;
+  color: #555;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px; /* ボタンを丸くする */
+  background-color: rgba(255, 255, 255, 0.8); /* 背景色を追加 */
+  transition: all 0.3s ease;
+}
+
+.nav ul li a:hover {
+  background-color: #979797b9;
+  color: #ffffff;
+  border-bottom: none; /* 下線を削除 */
+}
+
+.nav ul li.current a {
+  background-color: #818181; /* 現在のページを示す背景色 */
+  color: #ffffff;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh; /* ビューポートの高さを全体に設定 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
 .signup-container {
-  position: fixed; /* 画面全体に対する固定位置 */
-  z-index: 3; /* 背景オーバーレイよりも上に配置 */
+  position: relative;
+  z-index: 15; /* コンテンツを背景画像の上に配置 */
   background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
   border-radius: 10px;
   padding: 30px;
@@ -51,11 +160,6 @@ body {
   text-align: center;
   width: 90%;
   max-width: 400px;
-
-  /* 中央配置のための設定 */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .signup-container h2 {
@@ -72,32 +176,3 @@ body {
   margin-bottom: 20px;
 }
 
-.nav {
-  position: fixed;
-  bottom: 20px;
-  left: 0;
-  width: 100%;
-  background-color: transparent;
-  z-index: 3; /* ナビゲーションをフォームより上に */
-}
-
-.nav ul {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  gap: 15px;
-}
-
-.nav ul li a {
-  padding: 10px 20px;
-  text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #555;
-  border-radius: 5px;
-  transition: all 0.3s ease;
-}
-
-.nav ul li a:hover {
-  background-color: #979797b9;
-  color: white;
-}

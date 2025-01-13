@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} 
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -10,12 +10,12 @@
 </head>
 
 <body>
-    <!-- ローディング画面 -->
     <div class="loader">
         <div class="loading_logo">
             <img src="{% static 'img/img/load.png' %}" class="fadeUp" alt="Loading">
         </div>
     </div>
+    
 
     <div class="main">
         <nav class="nav">
@@ -27,7 +27,6 @@
                 <li><a href="#">Option</a></li>
             </ul>
         </nav>
-
 
     <!-- サインアップ・ログイン関連コンテンツ -->
     <div class="signup-container">
@@ -44,13 +43,12 @@
             <a href="{% url 'signup' %}">サインアップ</a>
         </p>
         {% endif %}
-        
     </div>
+    
     <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 
+
 </div>
-
-
 
     <script src="{% static 'js/224toppage.js' %}"></script>
 </body>
