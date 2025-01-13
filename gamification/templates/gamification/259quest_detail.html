@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>{{ quest.title }} - クエストの詳細</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #bfcad8;
         }
         .quest-detail {
-            border: 1px solid #ccc;
+            border: 3px solid #000000;
+            background-color: white;
             padding: 15px;
             margin: 20px 0;
             border-radius: 5px;
+            margin-bottom: 40px; /* Adjusted margin-bottom */
         }
-        h1 {
-            font-size: 2em;
+        h1 { 
+            display: inline-block;
+            font-size: 2em; 
+        }
+
+        a {
+            color: white; 
+            text-decoration: none;
         }
         .quest-meta {
             font-size: 1em;
             color: #000000;
         }
         .receive {
-            
             cursor: pointer;
             text-decoration: none;
         }
@@ -31,26 +40,44 @@
             cursor: pointer;
             text-decoration: none;
         }
+        .quest-back a {
+            color: black; 
+            font-size: large;
+        }
     </style>
 </head>
 <body>
-    <h1>{{ quest.title }}</h1>
+    <div class="row bg-dark text-white">
+        <h2 class="col-4"><strong>AImusing</strong></h2>
+        <h2 class="col-2"><small>クエスト</small></h2>
+        <h2 class="col-2"><small>ギルド</small></h2>
+        <h2 class="col-2"><small>パーティ</small></h2>
+        <h2 class="col-2"><a href="{% url 'password' %}">クエスト追加</a></h2>
+    </div>
+    
     <div class="quest-detail">
-        <p>{{ quest.detail }}</p>
-        <p class="quest-meta">
-            難易度: <span>{{ quest.difficulty }}</span> |
-            予想時間: <span>{{ quest.time }}</span> |
-            状態: <span>{{ quest.status }}</span>
-        </p>
+        <div class="background-color">
+
+            <h1>{{ quest.title }}</h1>
+            <p>クエスト詳細</p>
+            <p>{{ quest.detail }}</p>
+            <p class="quest-meta">
+                難易度: <span>{{ quest.difficulty }}</span> |
+                予想時間: <span>{{ quest.time }}</span> |
+                状態: <span>{{ quest.status }}</span>
+            </p>
+        </div>
         <button href="{% url 'accept_quest' quest.quest_id %}" class="receive">受ける</button>
-        
-        
         <form method="post" action="{% url 'delete_quest' quest_id=quest.quest_id %}" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="delete">削除</button>
         </form>
     </div>
-
-    <a href="{% url 'quest' %}">クエストリストに戻る</a>
+    
+    <div class="quest-back">
+        <a href="{% url 'quest' %}">クエストリストに戻る</a>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>
