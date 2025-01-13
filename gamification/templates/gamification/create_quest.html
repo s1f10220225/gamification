@@ -1,28 +1,23 @@
-<!-- create_quest.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>クエストの作成</title>
+    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
 
 </head>
 <body>
-    <div class="row bg-dark text-white w-100 m-0">
-        <h2 class="col-6"><strong>AImusing</strong></h2>
-        <h2 class="col-2"><small>クエスト</small></h2>
-        <h2 class="col-2"><small>ギルド</small></h2>
-        <h2 class="col-2"><small>パーティ</small></h2>
-    </div>
-    <div class="back">
+    <div class="signup-container">
     <h1>クエストを作成する</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}  <!-- フォームを段落として表示 -->
-            <button type="submit">送信</button>
-        </form>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- フォームを段落として表示 -->
+        <button type="submit">送信</button>
+    </form>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+ <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 </html>

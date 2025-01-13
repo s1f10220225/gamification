@@ -31,4 +31,9 @@ urlpatterns = [
     path('accounts/signup/', views.SignUp.as_view(), name='signup'),
     path('accounts/signup/complete/', views.signup_complete, name='signup_complete'),
     path('accounts/login/', views.LoginView.as_view(), name='login'),
+
+    path('224toppage',views.toppage,name='toppage'),
+    path('224login',views.main_login,name='main_login'),
+
+    
 ]

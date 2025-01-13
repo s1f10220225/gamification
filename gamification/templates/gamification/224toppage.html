@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>top</title>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/224toppage.css' %}" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <div class="loader">
+        <div class="loading_logo">
+            <img src="{% static 'img/img/load.png' %}" class="fadeUp" alt="Loading">
+        </div>
+    </div>
+
+    <div class="main">
+             <nav class="nav">
+            <ul>
+                <li class="current"><a href="#">Home</a></li>
+                <li><a href="{% url 'quest'%}">Quest</a></li>
+                <li><a href="">Stats</a></li>
+                <li><a href="{% url 'create_party'%}">Party</a></li>
+                <li><a href="">Option</a></li>
+            </ul>
+        </nav>
+        <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+    </div>
+
+
+    <script src="{% static 'js/224toppage.js' %}"></script>
+
+</body>
+</html>

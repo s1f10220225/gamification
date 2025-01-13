@@ -1,14 +1,22 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>サインアップ完了</title>
+    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
+
 </head>
 <body>
+    <div class="signup-container">
     <h2>サインアップが完了しました。</h2>
     <p>今後ログイン時に必要となるため、以下の情報を控えておいてください。</p>
     <p>社員番号:  {{ user.employee_number }}</p>
     <p>パスワード: あなたの設定したパスワード</p>
     <a href="{% url 'top' %}">トップページへ</a>
+</div>
+<img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
+
 </body>
 </html>

@@ -1,35 +1,58 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <title>Gamification</title>
-    {% load static %}
+    <link href="{% static 'css/224toppage.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <h1>この画面が見えてればOK!</h1>
-    <p>開発がんばろー！</p>
-    {% if user.is_authenticated %}
-    <p>いつもお疲れ様！ {{ user.name }} さん!</p>
-    <!--     
-    <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        
-        ボタンでやるならこっち。ログアウトはPOSTメソッドのためこうなっている
-        <button type="submit">ログアウト</button>
-    </form>
--->
-    <form action="{% url 'logout' %}" method="POST" name="logout">
-        {% csrf_token %}
-        <a href="javascript:logout.submit()">ログアウト</a>
-    </form>
+    <!-- ローディング画面 -->
+    <div class="loader">
+        <div class="loading_logo">
+            <img src="{% static 'img/img/load.png' %}" class="fadeUp" alt="Loading">
+        </div>
+    </div>
 
-    {% else %}
-    <p>あなたはまだログインしていません。</p>
-    <p><a href="{% url 'login' %}">ログイン</a> |
-    <a href="{% url 'signup' %}">サインアップ</a></p>
-    {% endif %}
+    <div class="main">
+        <nav class="nav">
+            <ul>
+                <li class="current"><a href="#">Home</a></li>
+                <li><a href="{% url 'quest' %}">Quest</a></li>
+                <li><a href="#">Stats</a></li>
+                <li><a href="{% url 'create_party' %}">Party</a></li>
+                <li><a href="#">Option</a></li>
+            </ul>
+        </nav>
+
+
+    <!-- サインアップ・ログイン関連コンテンツ -->
+    <div class="signup-container">
+        {% if user.is_authenticated %}
+        <p>いつもお疲れ様！ {{ user.name }} さん!</p>
+        <form action="{% url 'logout' %}" method="POST" name="logout">
+            {% csrf_token %}
+            <a href="javascript:logout.submit()">ログアウト</a>
+        </form>
+        {% else %}
+        <p>あなたはまだログインしていません。</p>
+        <p>
+            <a href="{% url 'login' %}">ログイン</a> |
+            <a href="{% url 'signup' %}">サインアップ</a>
+        </p>
+        {% endif %}
+        
+    </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
+</div>
+
+
+
+    <script src="{% static 'js/224toppage.js' %}"></script>
 </body>
 
 </html>

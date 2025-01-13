@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: grayscale(30%);
+}
+
+.quests-container {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 90%;
+  max-width: 600px;
+  overflow-y: auto;
+  max-height: 80vh; /* コンテナの最大高さを設定し、スクロール可能に */
+}
+
+.quest-container {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px; /* 各要素の間隔を空ける */
+  padding: 20px;
+  text-align: left; /* テキストを左揃えに */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quest-container:hover {
+  transform: scale(1.02); /* ホバー時に少し拡大 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.quest-title a {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.quest-title a:hover {
+  text-decoration: underline;
+}
+
+.quest-detail {
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.quest-meta {
+  font-size: 12px;
+  color: #777;
+}
+
+.quest-meta .difficulty {
+  font-weight: bold;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.buttonNeumorphism {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  aspect-ratio: 1;
+  color: #222;
+  background-color: #efefef;
+  border-radius: 50%;
+  box-shadow: -4px -4px 8px #a7a7a754;
+
+  /* ボタンを右下に固定配置 */
+  position: fixed;
+  bottom: 30px;
+  right: 60px;
+  z-index: 3;
+}
+
+@media (any-hover: hover) {
+  .buttonNeumorphism {
+    transition: box-shadow 0.1s;
+  }
+
+  .buttonNeumorphism:hover {
+    box-shadow: -2px -2px 4px #000000, 3px 3px 5px rgb(255, 255, 255);
+  }
+}

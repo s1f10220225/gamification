@@ -360,3 +360,9 @@ def member_select(request):
         'random_users': random_users,
     }
     return render(request, 'gamification/member_select.html', context)  # 新しいテンプレートrandom_users.htmlにデータを渡す
+def toppage(request):
+    return render(request, "gamification/224toppage.html") 
+
+
+def main_login(request):
+    return render(request, "gamification/224login.html")
