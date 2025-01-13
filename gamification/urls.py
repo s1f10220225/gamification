@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 from .views import user_profile 
+from .views import party_list_view
 
 urlpatterns = [
     path('', views.top, name='top'),
@@ -22,6 +23,9 @@ urlpatterns = [
     path('delete_quest/<int:quest_id>/', views.delete_quest, name='delete_quest'),
     
     path('user/profile/', views.user_profile, name='user_profile'),
+    path('parties/', views.party_list_view, name='party-list'),
+    path('users/', views.user_list_view, name='user-list'),  # 新しいURLパターンを追加
+    path('member_select/', views.member_select, name='member_select'), 
 
     # ユーザー認証関係
     path('accounts/signup/', views.SignUp.as_view(), name='signup'),

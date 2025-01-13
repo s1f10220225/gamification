@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>パーティリスト</title>
+</head>
+<body>
+    <h1>パーティリスト</h1>
+    <ul>
+        {% for party in parties %}
+            <li>
+                <strong>{{ party.name }}</strong>
+                <ul>
+                    {% for member in party.members.all %}
+                        <li>{{ member.user.name }}</li> 
+                    {% empty %}
+                        <li>メンバーはいません。</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% empty %}
+            <li>パーティはありません。</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

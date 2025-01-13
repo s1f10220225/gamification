@@ -25,12 +25,14 @@ def top(request):
 
 def quest(request):
     quests = Quest.objects.all()
-    return render(request, "gamification/259quest_list.html", {'quests': quests})
+    #return render(request, "gamification/259quest_list.html", {'quests': quests})
+    return render(request, "259quest_list.html", {'quests': quests})
+
 
 def quest_detail(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     return render(request, "gamification/259quest_detail.html", {'quest': quest})
-
+    
 def display_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
@@ -316,3 +318,45 @@ class LoginView(LoginView):
 def user_profile(request):
     user = request.user  # 現在のログインユーザーを取得
     return render(request, 'gamification/user_profile.html', {'user': user})
+
+# 以下追加
+
+from django.shortcuts import render
+from .models import Party
+
+def party_list_view(request):
+    # パーティと、そのメンバーのUserクエリを1発で取得
+    parties = Party.objects.prefetch_related('members__user')  # membersを通じてuserを間接的に取得 
+
+    context = {
+        'parties': parties,
+    }
+    return render(request, 'gamification/party_list.html', context)
+
+from django.shortcuts import render
+from .models import User  # Userモデルをインポート
+
+def user_list_view(request):
+    users = User.objects.all()  # すべてのユーザを取得
+
+    context = {
+        'users': users,
+    }
+    return render(request, 'gamification/user_list.html', context)  # 新しいテンプレートuser_list.htmlにデータを渡す
+
+import random
+from django.shortcuts import render
+from .models import User
+
+def member_select(request):
+    users = User.objects.all()  # すべてのユーザーを取得
+    if users.exists():  # ユーザーが存在する場合
+        num_users_to_select = 4  # 選ぶユーザーの数
+        random_users = random.sample(list(users), min(num_users_to_select, users.count()))  # ランダムにユーザーを選択
+    else:
+        random_users = []  # ユーザーがいない場合
+
+    context = {
+        'random_users': random_users,
+    }
+    return render(request, 'gamification/member_select.html', context)  # 新しいテンプレートrandom_users.htmlにデータを渡す
