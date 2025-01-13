@@ -1,10 +1,13 @@
+{% load static %} 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>GPT Chat Application</title>
+    <link href="{% static 'css/224chat.css' %}" rel="stylesheet">
 </head>
 <body>
+
     <h1>Chat with GPT-4o-mini</h1>
 
     {% if messages %}
@@ -41,5 +44,7 @@
 
         <input type="submit" value="Ask GPT">
     </form>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Bsackground" class="background">
+
 </body>
 </html>

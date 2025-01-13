@@ -1,10 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>パーティリスト</title>
+    <link href="{% static 'css/224quest.css' %}" rel="stylesheet">
+
 </head>
 <body>
+    <div class="container">
+    <div class="party-container">
     <h1>パーティリスト</h1>
     <ul>
         {% for party in parties %}
@@ -22,5 +27,15 @@
             <li>パーティはありません。</li>
         {% endfor %}
     </ul>
+    </div>
+    </div>
+    <a href="{% url 'create_party' %}" class="buttonNeumorphism">
+        <svg class="iconPlus" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+            <line x1="5" y1="12" x2="19" y2="12" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </a>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 </html>
