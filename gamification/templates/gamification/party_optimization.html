@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>おすすめ編成</title>
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <img src="{% static 'img/img/top.jpg' %}" alt="背景" class="background">
+    <div class="container mt-5">
+        <h1 class="text-center">{{ party.name }} のおすすめ編成</h1>
+        <p>希望したパーティーの特性: {{ purpose }}</p>
+
+        <h3 class="mt-4">おすすめのメンバー</h3>
+        <ul class="list-group mb-4">
+            {% for member in suggested_party %}
+                <li class="list-group-item">
+                    名前: {{ member.name }}<br>
+                    ジョブ: {{ member.job }}<br>
+                    理由: {{ member.reason }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="text-center">
+            <a href="{% url 'party_detail' party.party_id %}" class="btn btn-primary">この編成で決定</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">やり直す</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <h1>Chat with GPT-4o-mini</h1>
+    <h1>何でも相談屋</h1>
 
     {% if messages %}
         <div>
@@ -42,8 +42,13 @@
         <label for="question">Your Question:</label><br>
         <textarea id="question" name="question" required>{{ question }}</textarea><br>
 
-        <input type="submit" value="Ask GPT">
+        <input type="submit" value="相談屋に相談する">
+        
+        <div class="profile-actions">
+            <a href="{% url 'top' %}" class="action-link">ホームに戻る</a>
+        </div>
     </form>
+
     <img src="{% static 'img/img/top.jpg' %}" alt="Bsackground" class="background">
 
 </body>
