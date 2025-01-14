@@ -276,67 +276,63 @@ def edit_party(request, party_id):
 
 # テンプレートには「誰が」「何をしゃべった」だけを送ってる
 # 裏で、セッションでJson形式で履歴保存
+@login_required
 def gpt(request):
-    api_key = ''
     messages = []
-    message_list = []
 
-    # 2回目以降(POSTでリクエスト時)の処理
     if request.method == 'POST':
-        question = request.POST.get('question')  # 質問を取得
-        api_key = request.POST.get('api_key')  # APIキーを取得
-        # 会話のリセット用。「reset」に反応。ボタンとかの方がいいかも？
-        if question=="reset":
-            del request.session['messages']
-        else:
-            # API関連の処理
-            base_url = "https://api.openai.iniad.org/api/v1"
-            model = "gpt-4o-mini"
-            temperature = 0.2 # 答えの精度。0~2で、0に近いほど毎回同じ答えが返ってきやすい。
-            chat = ChatOpenAI(openai_api_key=api_key, openai_api_base=base_url, model_name=model, temperature=temperature)
-        
-
-            # もし、セッションに会話履歴があったらその続きから会話する処理
+        if 'reset' in request.POST:  # 会話のリセット
             if 'messages' in request.session:
-                messages = request.session['messages']
-                # JSONからHumanMessageとAIMessageオブジェクトに戻す
-                messages = [
-                    HumanMessage(content=msg['content']) if msg['role'] == 'human' else 
-                    AIMessage(content=msg['content']) if msg['role'] == 'ai' else
-                    SystemMessage(content=msg['content'])
-                    for msg in messages
-                ]
-            else:
-                messages = [
-                    SystemMessage(content="あなたは日本語を英語に翻訳するアシスタントです。ユーザーの日本語を英語に翻訳してください。")
-                ]
-            
+                del request.session['messages']
+            return redirect('gpt')
+        
+        question = request.POST.get('question')  # ユーザーからの質問を取得
+        api_key = request.user.gpt_key  # ログインユーザーのGPTキーを取得
 
-            messages.append(HumanMessage(content=question)) # 会話履歴(あれば)の最後に今回の質問を入れる
-            result = chat(messages) # ここでGPTにアクセスして回答を得る
-            messages.append(result) # 回答も履歴に入れる
-
-            # HumanMessage、AIMessage、SystemMessageオブジェクトをJSON形式に適応するために辞書形式に変換
-            messages_to_save = [
-                {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else 
-                {'role': 'ai', 'content': msg.content} if isinstance(msg, AIMessage) else
-                {'role': 'system', 'content': msg.content}
+        if 'messages' in request.session:
+            messages = request.session['messages']
+            messages = [
+                HumanMessage(content=msg['content']) if msg['role'] == 'human' else 
+                AIMessage(content=msg['content']) if msg['role'] == 'ai' else 
+                SystemMessage(content=msg['content'])
                 for msg in messages
             ]
-            # セッションに現時点での会話を保存
-            request.session['messages'] = messages_to_save
+        else:
+            messages = [
+                SystemMessage(content="""あなたは現代を生きる、様々な仕事という名の冒険を行っている冒険者のクエスト(仕事)をサポートをする「何でも相談屋」の主人です。
+                                  冒険者の相談ごとに乗り、その依頼を解決できるようにサポートしてください。
+                                  また、口調は馴れ馴れしくもどこか憎めないキャラをイメージしてください。
+                                  """)
+            ]
 
-            # メッセージのタイプを識別してコンテキストに渡すリストを作成
-            for message in messages:
-                message_list.append({
-                    'type': type(message).__name__,
-                    'content': message.content
-                })
+        messages.append(HumanMessage(content=question))
+
+        try:
+            chat = ChatOpenAI(
+                openai_api_key=api_key,
+                openai_api_base="https://api.openai.iniad.org/api/v1",
+                model_name="gpt-4o-mini",
+                temperature=0.2
+            )
+            result = chat(messages)
+            messages.append(result)
+        except Exception as e:
+            messages.append(AIMessage(content="エラーが発生しました: " + str(e)))
+
+        messages_to_save = [
+            {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else 
+            {'role': 'ai', 'content': msg.content} if isinstance(msg, AIMessage) else
+            {'role': 'system', 'content': msg.content}
+            for msg in messages
+        ]
+
+        request.session['messages'] = messages_to_save
 
     context = {
-        'api_key': api_key,
-        'messages': message_list,  # 会話の履歴など
-        'response_text': messages[-1].content if messages else "",  # ChatGPTの最新の応答
+        'messages': [
+            {'type': type(msg).__name__, 'content': msg.content} for msg in messages
+        ],
+        'user': request.user
     }
 
     return render(request, "gamification/225-GPT.html", context)
