@@ -1,9 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add Member</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
     <h2>Add a Member to {{ party.name }}</h2>
     <form method="post">
         {% csrf_token %}
@@ -17,5 +21,8 @@
         <input type="text" id="role" name="role" required>
         <button type="submit">Add Member</button>
     </form>
+    </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 </html>

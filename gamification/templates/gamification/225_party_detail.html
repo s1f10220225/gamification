@@ -1,9 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Party Detail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
+        
     <h2>Party: {{ party.name }}</h2>
     <h3>Members</h3>
     <ul>
@@ -18,5 +23,8 @@
         {% endfor %}
     </ul>
     <a href="{% url 'add_member' party.party_id %}">Add Member</a>
+    </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
 </body>
 </html>
