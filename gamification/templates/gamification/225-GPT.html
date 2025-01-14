@@ -43,7 +43,12 @@
         <textarea id="question" name="question" required>{{ question }}</textarea><br>
 
         <input type="submit" value="Ask GPT">
+        
+        <div class="profile-actions">
+            <a href="{% url 'top' %}" class="action-link">ホームに戻る</a>
+        </div>
     </form>
+
     <img src="{% static 'img/img/top.jpg' %}" alt="Bsackground" class="background">
 
 </body>
