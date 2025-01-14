@@ -8,7 +8,6 @@ body {
   align-items: center;
   background-color: black; /* 背景のフォールバックカラー */
   position: relative;
-  overflow: hidden;
 }
 
 

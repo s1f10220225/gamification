@@ -1,20 +1,23 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+    <meta charset="UTF-8">
     <title>Create Party</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="{% static 'css/224party.css' %}" rel="stylesheet">
-
 </head>
 <body>
-    <h2>Create a new Party</h2>
-    <form method="post">
-        {% csrf_token %}
-        <label for="party_name">Party Name:</label>
-        <input type="text" id="party_name" name="party_name" required>
-        <button type="submit">Create</button>
-    </form>
     <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 
+    <div class="container">
+        <h2>Create a New Party</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="party_name">Party Name:</label>
+            <input type="text" id="party_name" name="party_name" required>
+            <button type="submit">Create</button>
+        </form>
+    </div>
 </body>
 </html>

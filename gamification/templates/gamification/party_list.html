@@ -4,38 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <title>パーティリスト</title>
-    <link href="{% static 'css/224quest.css' %}" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-    <div class="party-container">
-    <h1>パーティリスト</h1>
-    <ul>
-        {% for party in parties %}
-            <li>
-                <strong>{{ party.name }}</strong>
-                <ul>
-                    {% for member in party.members.all %}
-                        <li>{{ member.user.name }}</li> 
-                    {% empty %}
-                        <li>メンバーはいません。</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% empty %}
-            <li>パーティはありません。</li>
-        {% endfor %}
-    </ul>
-    </div>
-    </div>
-    <a href="{% url 'create_party' %}" class="buttonNeumorphism">
-        <svg class="iconPlus" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="12" y1="5" x2="12" y2="19" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
-            <line x1="5" y1="12" x2="19" y2="12" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-    </a>
     <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 
+    <div class="container">
+        <h1>パーティリスト</h1>
+        <div class="party-container">
+            <ul>
+                {% for party in parties %}
+                    <li>
+                        <!-- party.name をクリック可能なリンクに変更 -->
+                        <a href="{% url 'party_detail' party.party_id %}">
+                            <strong>{{ party.name }}</strong>
+                        </a>
+                        <ul>
+                            {% for member in party.members.all %}
+                                <li>{{ member.user.name }}</li>
+                            {% empty %}
+                                <li>メンバーはいません。</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% empty %}
+                    <li>パーティはありません。</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <a href="{% url 'create_party' %}" class="buttonNeumorphism">
+        <svg class="iconPlus" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <line x1="5" y1="12" x2="19" y2="12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </a>
 </body>
 </html>
