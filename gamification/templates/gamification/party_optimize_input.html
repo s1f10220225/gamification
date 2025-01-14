@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>パーティーの再編成</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
+</head>
+<body>
+    <img src="{% static 'img/img/top.jpg' %}" alt="背景" class="background">
+    <div class="container mt-5">
+        <h1 class="text-center">パーティーの再編成: {{ party.name }}</h1>
+        <p>次の画面で目的に沿ったパーティー編成を提案します。</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="purpose" class="form-label">目的</label>
+                <textarea id="purpose" name="purpose" class="form-control" rows="4" required></textarea>
+                <small class="form-text text-muted">
+                    例: 「デザインスキルに特化したパーティーが欲しい」や「総合力の高いバランス型パーティー」など。
+                </small>
+            </div>
+            <button type="submit" class="btn btn-primary">提案を表示</button>
+        </form>
+    </div>
+</body>
+</html>

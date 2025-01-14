@@ -9,6 +9,8 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 import re # 正規表現による検索を行うため必要
+from django.http import JsonResponse
+import json
 
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
@@ -117,41 +119,160 @@ def accept_quest(request, quest_id):
     return redirect('quest')  
 
 # パーティーの作成
-class CreatePartyView(View):
-    def get(self, request):
-        return render(request, 'gamification/225_create_party.html')
+@login_required
+def party_dashboard(request):
+    # パーティと、そのメンバーのUserクエリを1発で取得
+    parties = Party.objects.prefetch_related('members__user')  # membersを通じてuserを間接的に取得 
 
-    def post(self, request):
-        party_name = request.POST.get('party_name')
+    context = {
+        'parties': parties,
+    }
+    return render(request, "gamification/party_dashboard.html", {"parties": parties})
+
+@login_required
+def create_party(request):
+    """
+    新しいパーティーを作成するビュー。
+    """
+    if request.method == "POST":
+        party_name = request.POST.get("party_name")
+        purpose = request.POST.get("purpose")
+
+        # パーティー作成
         party = Party.objects.create(name=party_name)
-        return redirect(reverse('party_detail', args=[party.party_id]))
+        PartyBelonged.objects.create(party=party, user=request.user, role="リーダー")
 
-class AddMemberView(View):
-    def get(self, request, party_id):
-        party = get_object_or_404(Party, pk=party_id)
-        users = User.objects.all()
-        return render(request, 'gamification/225_add_member.html', {'party': party, 'users': users})
+        return redirect("party_detail", party_id=party.party_id)
 
-    def post(self, request, party_id):
-        party = get_object_or_404(Party, pk=party_id)
-        user_id = request.POST.get('user_id')
-        role = request.POST.get('role')
-        user = get_object_or_404(User, pk=user_id)
-        PartyBelonged.objects.create(party=party, user=user, role=role)
-        return redirect(reverse('party_detail', args=[party.party_id]))
+    return render(request, "gamification/create_party.html")
 
-class RemoveMemberView(View):
-    def post(self, request, party_id, user_id):
-        party = get_object_or_404(Party, pk=party_id)
-        PartyBelonged.objects.filter(party=party, user_id=user_id).delete()
-        return redirect(reverse('party_detail', args=[party.party_id]))
+@login_required
+def party_detail(request, party_id):
+    """
+    パーティーの詳細を表示するビュー。
+    """
+    party = get_object_or_404(Party, pk=party_id)
+    members = PartyBelonged.objects.filter(party=party)
+    return render(request, "gamification/party_detail.html", {"party": party, "members": members})
 
-class PartyDetailView(View):
-    def get(self, request, party_id):
-        party = get_object_or_404(Party, pk=party_id)
-        members = PartyBelonged.objects.filter(party=party)
-        context = {'party': party, 'members': members}
-        return render(request, 'gamification/225_party_detail.html', context)
+@login_required
+def optimize_party(request, party_id):
+    """
+    GPTを使用して、ユーザーが指定した目的に応じてパーティーを最適化するビュー。
+    """
+    party = get_object_or_404(Party, pk=party_id)
+    current_members = PartyBelonged.objects.filter(party=party)
+    all_users = User.objects.all()
+
+    if request.method == "POST":
+        # ユーザーが入力した目的を取得
+        purpose = request.POST.get("purpose")
+
+        # ChatGPTへの指示を準備
+        user_data = [
+            {
+                "name": user.name,
+                "job": user.statuses.first().category.category_name if user.statuses.exists() else "不明",
+                "statuses": {
+                    status.category.status_name: status.parameter
+                    for status in user.statuses.all()
+                },
+            }
+            for user in all_users
+        ]
+        api_key = request.user.gpt_key
+        prompt = f"""
+        パーティー「{party.name}」を次の目的に合った構成に最適化してください：
+        目的: {purpose}
+
+        現在登録可能な候補メンバーの情報は以下です：
+        {user_data}
+
+        出力フォーマット:
+        [
+            {{"name": "名前", "job": "ジョブ", "reason": "選定理由"}},
+            ...
+        ]
+        """
+        try:
+            suggested_party = get_gpt_response(api_key, prompt, "", temperature=0.7)
+            suggested_party = json.loads(suggested_party)  # JSON形式の応答をパース
+        except json.JSONDecodeError:
+            return render(request, "gamification/error.html", {"message": "GPTからの回答が正しくありませんでした。再試行してください。"})
+
+        # 仮登録メンバーをパーティーに保存
+        for member in suggested_party:
+            user = User.objects.filter(name=member["name"]).first()
+            if user and not PartyBelonged.objects.filter(party=party, user=user).exists():
+                PartyBelonged.objects.create(party=party, user=user, role=member["job"])
+
+        return render(request, "gamification/party_optimization.html", {
+            "party": party,
+            "purpose": purpose,
+            "suggested_party": suggested_party,
+        })
+
+    return render(request, "gamification/party_optimize_input.html", {"party": party})
+
+
+@login_required
+def edit_party(request, party_id):
+    """
+    パーティーのメンバー編集を行うビュー。
+    """
+    party = get_object_or_404(Party, pk=party_id)
+
+    # パーティーのメンバーを取得
+    members = PartyBelonged.objects.filter(party=party)
+
+    if not PartyBelonged.objects.filter(party=party, user=request.user, role="リーダー").exists():
+        return JsonResponse({"error": "リーダーのみが編集可能です。"})
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "add_member":
+            # メンバーを追加
+            user_id = request.POST.get("user_id")
+            role = request.POST.get("role")
+            user = get_object_or_404(User, pk=user_id)
+            if not PartyBelonged.objects.filter(party=party, user=user).exists():
+                PartyBelonged.objects.create(party=party, user=user, role=role)
+            return JsonResponse({"message": f"{user.name} がパーティーに追加されました。"})
+
+        elif action == "remove_member":
+            # メンバーを削除
+            user_id = request.POST.get("user_id")
+            PartyBelonged.objects.filter(party=party, user_id=user_id).delete()
+            return JsonResponse({"message": "メンバーが削除されました。"})
+
+        elif action == "update_role":
+            # ジョブ（役職）を変更
+            user_id = request.POST.get("user_id")
+            new_role = request.POST.get("new_role")
+            member = PartyBelonged.objects.filter(party=party, user_id=user_id).first()
+            if member:
+                member.role = new_role
+                member.save()
+            return JsonResponse({"message": f"{member.user.name} の役職が {new_role} に変更されました。"})
+
+    # メンバー追加用の検索
+    query = request.GET.get("query")
+    if query:
+        # 名前、ジョブ、ステータスの一部で検索
+        users = User.objects.filter(
+            name__icontains=query
+        ) | User.objects.filter(
+            statuses__category__status_name__icontains=query
+        )
+    else:
+        users = User.objects.exclude(parties__party=party)
+
+    return render(request, "gamification/party_edit.html", {
+        "party": party,
+        "members": members,
+        "users": users.distinct(),  # 検索結果
+    })
 
 # テンプレートには「誰が」「何をしゃべった」だけを送ってる
 # 裏で、セッションでJson形式で履歴保存

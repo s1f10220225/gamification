@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新しいパーティーを作成</title>
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
+</head>
+<body>
+    <img src="{% static 'img/img/top.jpg' %}" alt="背景" class="background">
+    <div class="container">
+        <h2>新しいパーティーを作成</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="party_name">パーティーの名前:</label>
+            <input type="text" id="party_name" name="party_name" required>
+            <button type="submit" class="action-button">作成する</button>
+        </form>
+    </div>
+</body>
+</html>
