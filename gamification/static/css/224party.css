@@ -119,3 +119,34 @@ body {
     }
   }
   
+
+  .profile-actions {
+    margin-top: 30px;
+}
+
+.action-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+.action-link {
+    display: block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+}

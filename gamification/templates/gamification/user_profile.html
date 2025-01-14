@@ -1,17 +1,41 @@
-<!-- templates/user_profile.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/224prof.css' %}" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.name }}のプロフィール</title>
 </head>
 <body>
-    <h1>{{ user.name }}のプロフィール</h1>
-    <p>社員番号: {{ user.employee_number }}</p>
-    <p>GPTキー: {{ user.gpt_key }}</p> 
-    <!-- 注意: セキュリティ上、本番環境ではgpt_keyを表示することは推奨されません -->
-    <p>アカウントステータス: {{ user.is_active }}</p>
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1>{{ user.name }}</h1>
+                <p class="profile-subtitle">ユーザー情報</p>
+            </div>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="icon">👤</span>
+                    <p>社員番号: {{ user.employee_number }}</p>
+                </div>
+                <div class="detail-item">
+                    <span class="icon">🔑</span>
+                    <p>GPTキー: {{ user.gpt_key }}</p>
+                    <!-- 注意: 本番環境ではgpt_keyの表示は推奨されません -->
+                </div>
+                <div class="detail-item">
+                    <span class="icon">📊</span>
+                    <p>アカウントステータス: {{ user.is_active }}</p>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="action-button">編集</button>
+                <a href="{% url 'top' %}" class="action-link">ホームに戻る</a>
+            </div>
+        </div>
+    </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 </body>
 </html>

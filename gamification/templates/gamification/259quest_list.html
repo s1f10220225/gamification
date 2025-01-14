@@ -24,6 +24,9 @@
             {% empty %}
                 <p>現在利用可能なクエストはありません。</p>
             {% endfor %}
+            <div class="profile-actions">
+                <a href="{% url 'top' %}" class="action-link">ホームに戻る</a>
+            </div>
         </div>
     </div>
 

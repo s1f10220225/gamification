@@ -1,16 +1,50 @@
-{% load static %}
+{% load static %} 
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-    <link href="{% static 'css/224login.css' %}" rel="stylesheet">
+    <title>Gamification</title>
+    <link href="{% static 'css/224toppage.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
-    <div class="div">
-    <a href="{% url 'login'%}">
-    <img src="{% static 'img/img/start.jpg' %}" alt="Party">
-    </a>
+   
+   <div class="main">
+        <nav class="nav">
+            <ul>
+                <li><a href="{% url 'user_profile' %}">Profile</a></li>
+                <li><a href="{% url 'quest' %}">Quest</a></li>
+                <li><a href="#">Stats</a></li>
+                <li><a href="{% url 'party-list' %}">Party</a></li>
+                <li><a href="{% url 'gpt'%}">Chat</a></li>
+            </ul>
+        </nav>
+
+    <!-- サインアップ・ログイン関連コンテンツ -->
+    <div class="signup-container">
+        {% if user.is_authenticated %}
+        <p>いつもお疲れ様！ {{ user.name }} さん!</p>
+        <form action="{% url 'logout' %}" method="POST" name="logout">
+            {% csrf_token %}
+            <a href="javascript:logout.submit()">ログアウト</a>
+        </form>
+        {% else %}
+        <p>あなたはまだログインしていません。</p>
+        <p>
+            <a href="{% url 'login' %}">ログイン</a> |
+            <a href="{% url 'signup' %}">サインアップ</a>
+        </p>
+        {% endif %}
     </div>
+    
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
+
+</div>
+
+    <script src="{% static 'js/224toppage.js' %}"></script>
 </body>
+
 </html>
