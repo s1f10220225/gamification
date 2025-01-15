@@ -3,53 +3,45 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>GPT Chat Application</title>
+    <title>何でも相談屋</title>
     <link href="{% static 'css/224chat.css' %}" rel="stylesheet">
 </head>
 <body>
 
-    <h1>Chat with GPT-4o-mini</h1>
+    <h1>何でも相談屋</h1>
 
     {% if messages %}
-        <div>
-            <h2>今までの会話:</h2>
-            <div>
+        <div class="messages-container">
             {% for message in messages %}
-                {% if message.type == 'SystemMessage' %}
-                    <div class="system-message">
-                        <p>裏で開発者がAIに指示する部分: {{ message.content }}</p>
-                    </div>
-                {% elif message.type == 'HumanMessage' %}
-                    <div class="human-message">
-                        <p>質問: {{ message.content }}</p>
+                {% if message.type == 'HumanMessage' %}
+                    <div class="message human-message">
+                        <div class="message-name">{{ user.name }}</div>
+                        <div class="message-content">{{ message.content }}</div>
                     </div>
                 {% elif message.type == 'AIMessage' %}
-                    <div class="ai-message">
-                        <p>GPTの回答: {{ message.content }}</p>
+                    <div class="message ai-message">
+                        <div class="message-name">何でも屋の主人</div>
+                        <div class="message-content">{{ message.content }}</div>
                     </div>
                 {% endif %}
             {% endfor %}
-            </div>
         </div>
-        <p>{{ messages }}</p>
     {% endif %}
 
     <form method="post">
         {% csrf_token %}
-        <label for="api_key">API Key:</label>
-        <input type="text" id="api_key" name="api_key" value="{{ api_key }}" required><br>
+        <label for="question">何でも屋の主人に相談する:</label><br>
+        <textarea id="question" name="question">{{ question }}</textarea><br>
 
-        <label for="question">Your Question:</label><br>
-        <textarea id="question" name="question" required>{{ question }}</textarea><br>
-
-        <input type="submit" value="Ask GPT">
+        <input type="submit" value="何でも相談屋に相談する">
+        <button type="submit" name="reset" value="true">会話をリセットする</button>
         
         <div class="profile-actions">
             <a href="{% url 'top' %}" class="action-link">ホームに戻る</a>
         </div>
     </form>
 
-    <img src="{% static 'img/img/top.jpg' %}" alt="Bsackground" class="background">
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 
 </body>
 </html>

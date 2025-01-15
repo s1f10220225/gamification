@@ -1,13 +1,17 @@
+/* --- 全体設定 --- */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
     position: relative;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    background: linear-gradient(135deg, #1a1a1d, #3a3a3d);
+    color: #fff;
 }
 
+/* --- 背景画像 --- */
 .background {
     position: absolute;
     top: 0;
@@ -15,73 +19,133 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 0; /* 背景画像を最背面に配置 */
-    filter: grayscale(30%);
+    z-index: 0;
+    filter: brightness(0.3) blur(3px);
 }
 
-.form-container {
-    position: absolute; /* 絶対配置 */
-    top: 50%; /* 垂直方向の中央 */
-    left: 50%; /* 水平方向の中央 */
-    transform: translate(-50%, -50%); /* 完全に中央に配置 */
-    z-index: 5; /* 背景画像の上に表示 */
-    background-color: rgba(0, 0, 0, 0.8); /* 半透明の黒い背景 */
-    padding: 30px;
-    border-radius: 10px; /* 角丸を追加 */
-    box-shadow: 0 4px 6px rgba(29, 29, 29, 0.5); /* 軽い影を追加 */
-    width: 90%; /* レスポンシブ対応 */
-    max-width: 400px; /* 最大幅を指定 */
-    max-height: 70%; /* 最大高さを指定 */
-    overflow-y: auto; /* スクロール可能に設定 */
+/* --- ヘッダー --- */
+.row {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    border-bottom: 2px solid #444;
 }
 
-h1 {
-    text-align: center;
+.row h2 {
+    margin: 0;
+    padding: 0 15px;
+    font-size: 18px;
+    color: #00e5ff;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.row h2:hover {
     color: #fff;
-    margin-top: 20px;
+}
+
+/* --- フォームコンテナ --- */
+.form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 5;
-    position: relative;
+    background-color: rgba(30, 30, 30, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #00e5ff;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
-.form-group label {
-    color: #fff; /* ラベルの文字色を白に */
-    display: block;
+label {
+    font-size: 14px;
+    color: #ddd;
     margin-bottom: 5px;
+    display: block;
 }
 
-button {
-    display: block;
+textarea {
     width: 100%;
+    height: 100px;
     padding: 10px;
-    background-color: #bebebe;
-    color: #000000;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #222;
+    color: #fff;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #00e5ff;
+}
+
+/* --- ボタン --- */
+button {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #00e5ff;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-    background-color: #333;
+    background-color: #0098d4;
+    transform: scale(1.05);
 }
 
-a {
-    color: #fff;
-    display: block;
-    text-align: center;
-    position: fixed; /* 固定配置 */
-    bottom: 20px; /* ページの下部から20px */
-    right: 20px;
+button:active {
+    background-color: #006699;
+}
+
+/* --- レスポンスエリア --- */
+p {
     margin-top: 20px;
-    text-decoration: none;
-    z-index: 5; /* 背景画像の上に表示 */
+    padding: 10px;
+    background-color: #111;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    color: #ddd;
+    word-break: break-word;
 }
 
-a:hover {
-    text-decoration: underline;
+/* --- モバイル対応 --- */
+@media (max-width: 768px) {
+    .form-container {
+        width: 95%;
+    }
+
+    .row h2 {
+        font-size: 16px;
+    }
 }

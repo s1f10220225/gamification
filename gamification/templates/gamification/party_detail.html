@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ party.name }} - 詳細</title>
+    <link href="{% static 'css/224party.css' %}" rel="stylesheet">
+</head>
+<body>
+    <img src="{% static 'img/img/top.jpg' %}" alt="背景" class="background">
+    <div class="container">
+        <h1>{{ party.name }}</h1>
+
+        <h3>メンバー一覧</h3>
+        <div class="row">
+            {% for member in members %}
+                <div class="col-md-6">
+                    <div class="member-card">
+                        <strong>{{ member.user.name }}</strong> ({{ member.role }})
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'optimize_party' party.party_id %}" class="action-link">おすすめのメンバーで再編成する</a>
+        <a href="{% url 'edit_party' party.party_id %}" class="action-link">自分で編成する</a>
+    </div>
+</body>
+</html>
+

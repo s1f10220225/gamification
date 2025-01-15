@@ -9,6 +9,8 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 import re # 正規表現による検索を行うため必要
+from django.http import JsonResponse
+import json
 
 # ChatGPT関連
 from langchain.agents import Tool, initialize_agent, AgentType
@@ -117,105 +119,220 @@ def accept_quest(request, quest_id):
     return redirect('quest')  
 
 # パーティーの作成
-class CreatePartyView(View):
-    def get(self, request):
-        return render(request, 'gamification/225_create_party.html')
+@login_required
+def party_dashboard(request):
+    # パーティと、そのメンバーのUserクエリを1発で取得
+    parties = Party.objects.prefetch_related('members__user')  # membersを通じてuserを間接的に取得 
 
-    def post(self, request):
-        party_name = request.POST.get('party_name')
+    context = {
+        'parties': parties,
+    }
+    return render(request, "gamification/party_dashboard.html", {"parties": parties})
+
+@login_required
+def create_party(request):
+    """
+    新しいパーティーを作成するビュー。
+    """
+    if request.method == "POST":
+        party_name = request.POST.get("party_name")
+        purpose = request.POST.get("purpose")
+
+        # パーティー作成
         party = Party.objects.create(name=party_name)
-        return redirect(reverse('party_detail', args=[party.party_id]))
+        PartyBelonged.objects.create(party=party, user=request.user, role="リーダー")
 
-class AddMemberView(View):
-    def get(self, request, party_id):
-        party = get_object_or_404(Party, pk=party_id)
-        users = User.objects.all()
-        return render(request, 'gamification/225_add_member.html', {'party': party, 'users': users})
+        return redirect("party_detail", party_id=party.party_id)
 
-    def post(self, request, party_id):
-        party = get_object_or_404(Party, pk=party_id)
-        user_id = request.POST.get('user_id')
-        role = request.POST.get('role')
-        user = get_object_or_404(User, pk=user_id)
-        PartyBelonged.objects.create(party=party, user=user, role=role)
-        return redirect(reverse('party_detail', args=[party.party_id]))
+    return render(request, "gamification/create_party.html")
 
-class RemoveMemberView(View):
-    def post(self, request, party_id, user_id):
-        party = get_object_or_404(Party, pk=party_id)
-        PartyBelonged.objects.filter(party=party, user_id=user_id).delete()
-        return redirect(reverse('party_detail', args=[party.party_id]))
+@login_required
+def party_detail(request, party_id):
+    """
+    パーティーの詳細を表示するビュー。
+    """
+    party = get_object_or_404(Party, pk=party_id)
+    members = PartyBelonged.objects.filter(party=party)
+    return render(request, "gamification/party_detail.html", {"party": party, "members": members})
 
-class PartyDetailView(View):
-    def get(self, request, party_id):
-        party = get_object_or_404(Party, pk=party_id)
-        members = PartyBelonged.objects.filter(party=party)
-        context = {'party': party, 'members': members}
-        return render(request, 'gamification/225_party_detail.html', context)
+@login_required
+def optimize_party(request, party_id):
+    """
+    GPTを使用して、ユーザーが指定した目的に応じてパーティーを最適化するビュー。
+    """
+    party = get_object_or_404(Party, pk=party_id)
+    current_members = PartyBelonged.objects.filter(party=party)
+    all_users = User.objects.all()
+
+    if request.method == "POST":
+        # ユーザーが入力した目的を取得
+        purpose = request.POST.get("purpose")
+
+        # ChatGPTへの指示を準備
+        user_data = [
+            {
+                "name": user.name,
+                "job": user.statuses.first().category.category_name if user.statuses.exists() else "不明",
+                "statuses": {
+                    status.category.status_name: status.parameter
+                    for status in user.statuses.all()
+                },
+            }
+            for user in all_users
+        ]
+        api_key = request.user.gpt_key
+        prompt = f"""
+        パーティー「{party.name}」を次の目的に合った構成に最適化してください：
+        目的: {purpose}
+
+        現在登録可能な候補メンバーの情報は以下です：
+        {user_data}
+
+        出力フォーマット:
+        [
+            {{"name": "名前", "job": "ジョブ", "reason": "選定理由"}},
+            ...
+        ]
+        """
+        try:
+            suggested_party = get_gpt_response(api_key, prompt, "", temperature=0.7)
+            suggested_party = json.loads(suggested_party)  # JSON形式の応答をパース
+        except json.JSONDecodeError:
+            return render(request, "gamification/error.html", {"message": "GPTからの回答が正しくありませんでした。再試行してください。"})
+
+        # 仮登録メンバーをパーティーに保存
+        for member in suggested_party:
+            user = User.objects.filter(name=member["name"]).first()
+            if user and not PartyBelonged.objects.filter(party=party, user=user).exists():
+                PartyBelonged.objects.create(party=party, user=user, role=member["job"])
+
+        return render(request, "gamification/party_optimization.html", {
+            "party": party,
+            "purpose": purpose,
+            "suggested_party": suggested_party,
+        })
+
+    return render(request, "gamification/party_optimize_input.html", {"party": party})
+
+
+@login_required
+def edit_party(request, party_id):
+    """
+    パーティーのメンバー編集を行うビュー。
+    """
+    party = get_object_or_404(Party, pk=party_id)
+
+    # パーティーのメンバーを取得
+    members = PartyBelonged.objects.filter(party=party)
+
+    if not PartyBelonged.objects.filter(party=party, user=request.user, role="リーダー").exists():
+        return JsonResponse({"error": "リーダーのみが編集可能です。"})
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "add_member":
+            # メンバーを追加
+            user_id = request.POST.get("user_id")
+            role = request.POST.get("role")
+            user = get_object_or_404(User, pk=user_id)
+            if not PartyBelonged.objects.filter(party=party, user=user).exists():
+                PartyBelonged.objects.create(party=party, user=user, role=role)
+            return JsonResponse({"message": f"{user.name} がパーティーに追加されました。"})
+
+        elif action == "remove_member":
+            # メンバーを削除
+            user_id = request.POST.get("user_id")
+            PartyBelonged.objects.filter(party=party, user_id=user_id).delete()
+            return JsonResponse({"message": "メンバーが削除されました。"})
+
+        elif action == "update_role":
+            # ジョブ（役職）を変更
+            user_id = request.POST.get("user_id")
+            new_role = request.POST.get("new_role")
+            member = PartyBelonged.objects.filter(party=party, user_id=user_id).first()
+            if member:
+                member.role = new_role
+                member.save()
+            return JsonResponse({"message": f"{member.user.name} の役職が {new_role} に変更されました。"})
+
+    # メンバー追加用の検索
+    query = request.GET.get("query")
+    if query:
+        # 名前、ジョブ、ステータスの一部で検索
+        users = User.objects.filter(
+            name__icontains=query
+        ) | User.objects.filter(
+            statuses__category__status_name__icontains=query
+        )
+    else:
+        users = User.objects.exclude(parties__party=party)
+
+    return render(request, "gamification/party_edit.html", {
+        "party": party,
+        "members": members,
+        "users": users.distinct(),  # 検索結果
+    })
 
 # テンプレートには「誰が」「何をしゃべった」だけを送ってる
 # 裏で、セッションでJson形式で履歴保存
+@login_required
 def gpt(request):
-    api_key = ''
     messages = []
-    message_list = []
 
-    # 2回目以降(POSTでリクエスト時)の処理
     if request.method == 'POST':
-        question = request.POST.get('question')  # 質問を取得
-        api_key = request.POST.get('api_key')  # APIキーを取得
-        # 会話のリセット用。「reset」に反応。ボタンとかの方がいいかも？
-        if question=="reset":
-            del request.session['messages']
-        else:
-            # API関連の処理
-            base_url = "https://api.openai.iniad.org/api/v1"
-            model = "gpt-4o-mini"
-            temperature = 0.2 # 答えの精度。0~2で、0に近いほど毎回同じ答えが返ってきやすい。
-            chat = ChatOpenAI(openai_api_key=api_key, openai_api_base=base_url, model_name=model, temperature=temperature)
-        
-
-            # もし、セッションに会話履歴があったらその続きから会話する処理
+        if 'reset' in request.POST:  # 会話のリセット
             if 'messages' in request.session:
-                messages = request.session['messages']
-                # JSONからHumanMessageとAIMessageオブジェクトに戻す
-                messages = [
-                    HumanMessage(content=msg['content']) if msg['role'] == 'human' else 
-                    AIMessage(content=msg['content']) if msg['role'] == 'ai' else
-                    SystemMessage(content=msg['content'])
-                    for msg in messages
-                ]
-            else:
-                messages = [
-                    SystemMessage(content="あなたは日本語を英語に翻訳するアシスタントです。ユーザーの日本語を英語に翻訳してください。")
-                ]
-            
+                del request.session['messages']
+            return redirect('gpt')
+        
+        question = request.POST.get('question')  # ユーザーからの質問を取得
+        api_key = request.user.gpt_key  # ログインユーザーのGPTキーを取得
 
-            messages.append(HumanMessage(content=question)) # 会話履歴(あれば)の最後に今回の質問を入れる
-            result = chat(messages) # ここでGPTにアクセスして回答を得る
-            messages.append(result) # 回答も履歴に入れる
-
-            # HumanMessage、AIMessage、SystemMessageオブジェクトをJSON形式に適応するために辞書形式に変換
-            messages_to_save = [
-                {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else 
-                {'role': 'ai', 'content': msg.content} if isinstance(msg, AIMessage) else
-                {'role': 'system', 'content': msg.content}
+        if 'messages' in request.session:
+            messages = request.session['messages']
+            messages = [
+                HumanMessage(content=msg['content']) if msg['role'] == 'human' else 
+                AIMessage(content=msg['content']) if msg['role'] == 'ai' else 
+                SystemMessage(content=msg['content'])
                 for msg in messages
             ]
-            # セッションに現時点での会話を保存
-            request.session['messages'] = messages_to_save
+        else:
+            messages = [
+                SystemMessage(content="""あなたは現代を生きる、様々な仕事という名の冒険を行っている冒険者のクエスト(仕事)をサポートをする「何でも相談屋」の主人です。
+                                  冒険者の相談ごとに乗り、その依頼を解決できるようにサポートしてください。
+                                  また、口調は馴れ馴れしくもどこか憎めないキャラをイメージしてください。
+                                  """)
+            ]
 
-            # メッセージのタイプを識別してコンテキストに渡すリストを作成
-            for message in messages:
-                message_list.append({
-                    'type': type(message).__name__,
-                    'content': message.content
-                })
+        messages.append(HumanMessage(content=question))
+
+        try:
+            chat = ChatOpenAI(
+                openai_api_key=api_key,
+                openai_api_base="https://api.openai.iniad.org/api/v1",
+                model_name="gpt-4o-mini",
+                temperature=0.2
+            )
+            result = chat(messages)
+            messages.append(result)
+        except Exception as e:
+            messages.append(AIMessage(content="エラーが発生しました: " + str(e)))
+
+        messages_to_save = [
+            {'role': 'human', 'content': msg.content} if isinstance(msg, HumanMessage) else 
+            {'role': 'ai', 'content': msg.content} if isinstance(msg, AIMessage) else
+            {'role': 'system', 'content': msg.content}
+            for msg in messages
+        ]
+
+        request.session['messages'] = messages_to_save
 
     context = {
-        'api_key': api_key,
-        'messages': message_list,  # 会話の履歴など
-        'response_text': messages[-1].content if messages else "",  # ChatGPTの最新の応答
+        'messages': [
+            {'type': type(msg).__name__, 'content': msg.content} for msg in messages
+        ],
+        'user': request.user
     }
 
     return render(request, "gamification/225-GPT.html", context)
