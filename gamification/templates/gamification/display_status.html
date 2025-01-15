@@ -1,29 +1,44 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/188status.css' %}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ステータスリスト</title>
 
 </head>
 <body>
     <div class="container">
-        <div class="left-space">
-            <h2><a href="{% url 'top' %}">アプリ名</a></h2>
-            <p><a href="{% url 'quest' %}">クエスト</a></p>
-            <p><a>ギルド</a></p>
-            <p><a href="{% url 'create_party' %}">パーティ</a></p>
-        </div>
-        <div class="status-container">
-            <h2 class="user">
-                {{ user.name }}
-            </h2>
-            {% for s in status %}
-                <p class="status">{{ s.category.status_name }} : {{ s.parameter }}</p>
-            {% empty %}
-                <p class="status">登録されているステータスはありません。</p>
-            {% endfor %}
-            <p><a href="{% url 'career_to_status' user.user_id %}">ステータスを登録(変更)する</a></p>
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1>{{ user.name }}</h1>
+                <p class="profile-subtitle">ステータス情報</p>
+            </div>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="icon">👤</span>
+                    <p>社員番号: {{ user.employee_number }}</p>
+                </div>
+                <div class="status">
+                    <h3>ステータス</h2>
+                    {% for s in status %}
+                    <p class="status-item">{{ s.category.status_name }} <br> {{ s.parameter }} </p>
+                    {% empty %}
+                    <p>登録されているステータスはありません。</p>
+                    {% endfor %}
+                </div>
+                <div class="detail-item">
+                    <span class="icon">📊</span>
+                    <p><a href="{% url 'career_to_status' user.user_id %}">ステータスを登録(変更)する</a></p>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <a href="{% url 'top' %}" class="action-link">ホームに戻る</a>
+            </div>
         </div>
     </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
 </body>
 </html>

@@ -1,18 +1,60 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/188career.css' %}" rel="stylesheet">
     <title>キャリアをステータスに変換</title>
 
 </head>
 <body>
     <div class="container">
-        <div class="left-space">
-            <h2><a href="{% url 'top' %}">アプリ名</a></h2>
-            <p><a href="{% url 'quest' %}">クエスト</a></p>
-            <p><a>ギルド</a></p>
-            <p><a href="{% url 'create_party' %}">パーティ</a></p>
-        </div> 
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1>{{ user.name }}</h1>
+                <p class="profile-subtitle">キャリアをステータスに変換</p>
+            </div>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <h2>キャリアを入力</h2>
+                </div>
+                <div class="form">
+                    {% if not status %}
+                        <form method="post">
+                        {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            {% endfor %}
+                            <button type="submit" name="submit">ステータスに変換して登録</button>
+                        </form>
+                    {% endif %}
+                    {% if status %}
+                        <p>登録されたステータス</p>
+                    {% endif %}
+                </div>
+                {% if status %}
+                    <div class="status-item">
+                        {% for s,v in status %}
+                            <p>{{s}}:{{v}}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="detail-item">
+                        <p>Submit status: {{ submit }} </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="profile-actions">
+                <a href="{% url 'display_status' user.user_id %}" class="action-link">ステータスに戻る</a>
+            </div>
+        </div>
+    </div>
+    <img src="{% static 'img/img/top.jpg' %}" alt="Background" class="background">
+
     <div class="right-space"> 
         <div class="form-container"> 
             {% if not status %}
