@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="profile-actions">
-                <a href="{% url 'display_status' user.user_id %}" class="action-link">ステータスに戻る</a>
+                <a href="{% url 'display_status' %}" class="action-link">ステータスに戻る</a>
             </div>
         </div>
     </div>
@@ -78,7 +78,7 @@
                 {% endfor %}
                 <p>Submit status: {{ submit }} </p>
             {% endif %}
-            <a href="{% url 'display_status' user.user_id %}">ステータスに戻る</a>
+            <a href="{% url 'display_status' %}">ステータスに戻る</a>
         </div>
     </div>
 </body>
