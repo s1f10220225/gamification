@@ -35,16 +35,18 @@ def quest_detail(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
     return render(request, "gamification/259quest_detail.html", {'quest': quest})
     
-def display_status(request, user_id):
-    user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+@login_required
+def display_status(request):
+    user = request.user
     status = Status.objects.filter(user=user.user_id).order_by("category")  # 取得したユーザーを使ってステータスを取得
     return render(request, 'gamification/display_status.html', {'user': user, 'status': status})  # 取得したユーザーをテンプレートに渡す
 
-def career_to_status(request, user_id):
+@login_required
+def career_to_status(request):
     if request.method == 'POST':
         form = CareerForm(request.POST) # フォームの受信
         insert_forms = request.POST['career'] # 受信したフォームからcareerを取り出す
-        user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+        user = request.user
         status = Category.objects.all().values_list("status_name").order_by("category_name").distinct() # ステータス一覧の取得(カテゴリーごとにソート)
         status_list = [] #後々使う処理のため存在するステータスを記録するリスト
         order = "これからとある人のキャリアを送ります。あなたはその人のキャリアからその人のステータスを作成してください。各ステータスは「'ステータス名:0から100の数値'」という形で表してください。存在するステータスは次の通りです。「"
@@ -94,7 +96,7 @@ def career_to_status(request, user_id):
     else:
         form = CareerForm()
         insert_forms = '初期値'
-        user = get_object_or_404(User, pk=user_id)  # IDを使ってユーザーを取得
+        user = request.user
         return render(request, 'gamification/career_to_status.html', {'user': user, 'form': form, 'insert_forms':insert_forms, 'submit':"Not submitted"})  # 取得したユーザーをテンプレートに渡す
 
 def password(request):
